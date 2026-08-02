@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="syusq's interactive personal site.">
+    <meta name="theme-color" content="#d32f2f">
+    <meta property="og:title" content="syusq // info">
+    <meta property="og:description" content="click things">
+    <meta property="og:type" content="website">
+    <title>syusq // info</title>
+    <link rel="icon" id="favicon" href="./DangoRight.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://media1.tenor.com">
+    <link rel="preload" as="image" href="https://media1.tenor.com/m/luur17rklVkAAAAC/kasane-teto-teto.gif" fetchpriority="high">
+    <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" fetchpriority="high">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css?v=50">
+</head>
+<body>
+
+    <div id="custom-cursor"></div>
+    <div class="crt-curvature"></div>
+    <div class="crt-overlay"></div>
+    <div class="glitch-overlay" id="glitch-overlay"></div>
+
+    <div id="bg-layer-1" class="bg-layer parallax-layer" data-speed="0.015"></div>
+    <div id="bg-layer-2" class="bg-layer parallax-layer" data-speed="0.015"></div>
+
+    <div class="p5-clock-widget aberration parallax-layer sfx-hover" data-speed="0.035" data-constrain="true">
+        <div class="date-text" id="date-display">JAN 13 // TUE</div>
+        <div class="time-text" id="clock">19:39</div>
+    </div>
+
+    <div class="dialogue-container parallax-layer" data-speed="0.05" data-constrain="true">
+        <div class="social-links">
+            <a href="https://youtube.com/playlist?list=PL86E8E3F409C4E7B8&si=q8Ec4tWCC7jssJz0" class="social-btn sfx-hover">
+                <div class="social-btn-inner">PEAK</div>
+            </a>
+            <a href="https://backloggd.com/u/syusq/" class="social-btn sfx-hover">
+                <div class="social-btn-inner">BACKLOGGD</div>
+            </a>
+        </div>
+        <div class="dialogue-box sfx-hover">
+            <div class="box-inner">
+                <div class="avatar-circle sfx-hover">
+                    <div class="avatar-spinner" id="avatar-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <img id="avatar-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" alt="">
+                    <img id="gif-image" src="" alt="" class="hidden">
+                </div>
+                <div class="text-content">
+                    <div class="diva-label aberration" id="speaker-label"></div>
+                    <div class="message-text" id="dialogue-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-controls parallax-layer" data-speed="0.04" data-constrain="true">
+        <div class="copyright-widget" id="copyright-display">
+            <span id="copyright-text"> </span>
+        </div>
+        <div class="bg-buttons">
+            <div class="bg-btn sfx-hover" data-index="0" data-jp="壱">01<svg class="kanji-strokes" data-src="./assets/kanji/058f1.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="1" data-jp="弐">02<svg class="kanji-strokes" data-src="./assets/kanji/05f10.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="2" data-jp="参">03<svg class="kanji-strokes" data-src="./assets/kanji/053c2.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="3" data-jp="肆">04<svg class="kanji-strokes" data-src="./assets/kanji/08086.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="4" data-jp="伍">05<svg class="kanji-strokes" data-src="./assets/kanji/04f0d.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+        </div>
+    </div>
+
+    <div class="model-container parallax-layer sfx-hover" data-speed="0.025" data-constrain="true">
+        <div class="model-loader-overlay" id="model-loader" role="status" aria-live="polite" aria-label="Loading 3D model">
+            <div class="spinner" aria-hidden="true"></div>
+        </div>
+        <model-viewer
+            id="mv-model"
+            data-src="./dangoo.glb"
+            camera-controls rotation-speed="20deg" shadow-intensity="1" exposure="1"
+            camera-target="0m 0m 0m" camera-orbit="-180deg 60deg 14m" field-of-view="30deg"
+            disable-zoom interaction-prompt="none">
+        </model-viewer>
+    </div>
+
+    <div id="screen-pet-1" class="screen-pet" data-color="var(--pink)">
+        <div class="pet-sprite-container">
+            <img class="pet-img-right" src="./DangoRight.png" alt="" decoding="async">
+            <img class="pet-img-left" src="./DangoLeft.png" alt="" decoding="async">
+        </div>
+    </div>
+
+    <div id="screen-pet-2" class="screen-pet" data-color="var(--blue)">
+        <div class="pet-sprite-container">
+            <img class="pet-img-right" src="./DangoRight2.png" alt="" decoding="async">
+            <img class="pet-img-left" src="./DangoLeft2.png" alt="" decoding="async">
+        </div>
+    </div>
+
+    <div id="screen-pet-3" class="screen-pet" data-color="var(--green)">
+        <div class="pet-sprite-container">
+            <img class="pet-img-right" src="./DangoRight3.png" alt="" decoding="async">
+            <img class="pet-img-left" src="./DangoLeft3.png" alt="" decoding="async">
+        </div>
+    </div>
+
+    <script type="module" src="./js/app.js?v=51"></script>
+</body>
+</html>

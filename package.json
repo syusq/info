@@ -1,0 +1,9 @@
+{
+  "name": "syusq-info",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "check": "npm run check:syntax && node scripts/validate-site.mjs",
+    "check:syntax": "node --check js/app.js && node --check js/content.js && node --check js/dialogues.js"
+  }
+}
