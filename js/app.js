@@ -192,7 +192,7 @@
         setupHoverSFX();
 
         import { backgrounds, copyrightInfo, reactionGifs } from './content.js?v=26';
-        import { dialogues } from './dialogues.js?v=14';
+        import { dialogues } from './dialogues.js?v=15';
 
         let currentDialogueIndex = 0;
         let currentGifIndex = 0;

@@ -8,7 +8,7 @@ export const dialogues = [
     { speaker: "TOMOYA", text: "Using bread." },
     { speaker: "NAGISA", text: "Bread is dependable." },
     { speaker: "", text: "As they climb the hill together, something inside Nagisa's school bag knocks softly against the clasp with every step." },
-    { speaker: "TOMOYA", text: "You’ve got contraband in there." },
+    { speaker: "TOMOYA", text: "You’ve got contraband in there?" },
     { speaker: "NAGISA", text: "I don’t think it counts as contraband." },
     { speaker: "TOMOYA", text: "That’s exactly what someone carrying contraband would say." },
     { speaker: "", text: "Nagisa opens the bag just enough to show him an old brass key tied to a cracked wooden tag: CLUB — STORAGE." },
