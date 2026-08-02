@@ -7,7 +7,7 @@ export const dialogues = [
     { speaker: "NAGISA", text: "No. I was trying to give myself courage." },
     { speaker: "TOMOYA", text: "Using bread." },
     { speaker: "NAGISA", text: "Bread is dependable." },
-    { speaker: "", text: "As they climb together, something inside Nagisa's school bag knocks softly against the clasp with every step." },
+    { speaker: "", text: "As they climb the hill together, something inside Nagisa's school bag knocks softly against the clasp with every step." },
     { speaker: "TOMOYA", text: "You’ve got contraband in there." },
     { speaker: "NAGISA", text: "I don’t think it counts as contraband." },
     { speaker: "TOMOYA", text: "That’s exactly what someone carrying contraband would say." },
