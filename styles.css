@@ -253,25 +253,77 @@
                 0 0 4px rgba(57, 197, 187, 0.28);
         }
 
+        .clock-model-group {
+            position: fixed;
+            inset: 0;
+            z-index: 24;
+            pointer-events: none;
+            will-change: transform;
+        }
+
         .p5-clock-widget {
             position: fixed; top: -50px; right: -50px;
-            background: var(--red); color: white;
+            background: transparent; color: white;
             padding: 70px 110px 40px 60px;
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 85%);
-            text-align: right; z-index: 100;
-            box-shadow: -5px 5px 0 black;
+            text-align: right; z-index: 2;
             will-change: transform;
-            transition: background 0.3s, box-shadow 0.3s, filter 0.3s;
+            transition: filter 0.3s;
+            pointer-events: auto;
+        }
+
+        .p5-clock-widget::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background: var(--red);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 85%);
+            filter: drop-shadow(-5px 5px 0 var(--black));
+            transition: background 0.3s, filter 0.3s;
         }
 
         .p5-clock-widget:hover {
-            background: var(--teal);
-            box-shadow: -8px 8px 0 var(--black), 0 0 25px var(--teal);
             filter: brightness(1.2);
+        }
+
+        .p5-clock-widget:hover::before {
+            background: var(--teal);
+            filter: drop-shadow(-8px 8px 0 var(--black)) drop-shadow(0 0 25px var(--teal));
+        }
+
+        .clock-frame-border {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow: visible;
+            pointer-events: none;
+            shape-rendering: geometricPrecision;
+            filter:
+                drop-shadow(1px 0 0 rgba(255, 0, 0, 0.2))
+                drop-shadow(-1px 0 0 rgba(0, 255, 255, 0.2));
+        }
+
+        .clock-frame-border path {
+            fill: none;
+            stroke: white;
+            stroke-width: 4.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .p5-clock-widget .date-text,
+        .p5-clock-widget .time-text {
+            position: relative;
+            z-index: 3;
         }
 
         .time-text {
             font-family: 'Teko', sans-serif; font-size: 3.7rem; font-weight: 700; line-height: 0.78;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum' 1;
             text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.82), 0 0 4px rgba(255, 255, 255, 0.28);
         }
 
@@ -512,15 +564,93 @@
         .model-container {
             position: fixed; top: 25px; left: 25px;
             width: 270px; height: 320px; z-index: 25;
-            background: rgba(0, 0, 0, 0.404);
+            background: var(--black);
             clip-path: polygon(0 0, 100% 10%, 92% 100%, 8% 90%);
             transition: filter 0.3s;
             pointer-events: auto;
         }
 
+        .secondary-model-container {
+            position: fixed;
+            top: 107px;
+            right: -20px;
+            width: 240px;
+            height: 265px;
+            z-index: 1;
+            background: var(--black);
+            clip-path: polygon(20% 0, 100% 9%, 100% 100%, 0 64.5%);
+            transition: filter 0.3s;
+            pointer-events: auto;
+        }
+
         model-viewer {
+            display: block;
+            position: relative;
+            z-index: 1;
             width: 100%; height: 100%;
             --poster-color: transparent;
+            filter: saturate(1.08) contrast(1.04);
+            opacity: 0;
+            transition: opacity 0.12s steps(2, end), filter 0.3s ease;
+        }
+
+        model-viewer.render-ready {
+            opacity: 1;
+        }
+
+        .model-container:hover model-viewer,
+        .secondary-model-container:hover model-viewer {
+            filter: saturate(1.16) contrast(1.08) brightness(1.05);
+        }
+
+        .model-frame-border {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 11;
+            overflow: visible;
+            pointer-events: none;
+            shape-rendering: geometricPrecision;
+            filter:
+                drop-shadow(1px 0 0 rgba(255, 0, 0, 0.2))
+                drop-shadow(-1px 0 0 rgba(0, 255, 255, 0.2));
+        }
+
+        .model-frame-border path {
+            fill: none;
+            stroke: white;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .model-frame-border .model-frame-edge-near {
+            stroke-width: 5;
+        }
+
+        .model-frame-border .model-frame-edge-far {
+            stroke-width: 4;
+        }
+
+        .secondary-model-frame-border .secondary-model-frame-edge {
+            stroke-width: 4.5;
+        }
+
+        .miku-credit {
+            position: absolute;
+            top: 100px;
+            right: 176px;
+            transform: rotate(-74.8deg);
+            transform-origin: 100% 100%;
+            font-family: 'Teko', sans-serif;
+            font-size: 11px;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 0.04em;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            z-index: 25;
         }
 
         .model-loader-overlay {
@@ -538,6 +668,10 @@
         .model-loader-overlay.hidden {
             opacity: 0;
             visibility: hidden;
+        }
+
+        .secondary-model-container .model-loader-overlay {
+            clip-path: polygon(17.5% 0, 100% 9%, 100% 100%, 0 64.5%, 15% 16%);
         }
 
         .spinner {
@@ -660,6 +794,7 @@
 
         @media (max-width: 768px) {
             .model-container { width: 150px; height: 180px; top: 10px; left: 10px; }
+            .secondary-model-container { top: 105px; right: -20px; width: 240px; height: 265px; }
             .p5-clock-widget { padding: 40px 60px 20px 40px; top: -30px; right: -30px; }
             .time-text { font-size: 2.2rem; }
             .date-text { font-size: 0.9rem; }
@@ -690,7 +825,7 @@
 
         @media (max-width: 400px) {
             .dialogue-container { transform: scale(0.75); width: calc(100vw - 65px); }
-            .model-container { display: none; }
+            .model-container, .secondary-model-container { display: none; }
         }
 
         .social-btn-inner:hover,
