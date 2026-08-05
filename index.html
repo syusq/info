@@ -16,7 +16,14 @@
     <link rel="preload" as="image" href="https://media1.tenor.com/m/luur17rklVkAAAAC/kasane-teto-teto.gif" fetchpriority="high">
     <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css?v=50">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.183.0/build/three.module.min.js"
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="./styles.css?v=103">
 </head>
 <body>
 
@@ -28,9 +35,53 @@
     <div id="bg-layer-1" class="bg-layer parallax-layer" data-speed="0.015"></div>
     <div id="bg-layer-2" class="bg-layer parallax-layer" data-speed="0.015"></div>
 
-    <div class="p5-clock-widget aberration parallax-layer sfx-hover" data-speed="0.035" data-constrain="true">
-        <div class="date-text" id="date-display">JAN 13 // TUE</div>
-        <div class="time-text" id="clock">19:39</div>
+    <div class="clock-model-group parallax-layer" data-speed="0.035" data-constrain="true">
+        <div class="p5-clock-widget aberration sfx-hover">
+            <div class="date-text" id="date-display">JAN 13 // TUE</div>
+            <div class="time-text" id="clock">19:39</div>
+            <svg class="clock-frame-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M 15 84.5 L 1 1 L 99 1 L 99 99 L 15 84.5"></path>
+                <path d="M 15 84.5 L 25.8 86.4"></path>
+            </svg>
+        </div>
+
+        <div class="secondary-model-container sfx-hover">
+            <div class="model-loader-overlay" id="model-loader-secondary" role="status" aria-live="polite" aria-label="Loading secondary 3D model">
+                <div class="spinner" aria-hidden="true"></div>
+            </div>
+            <model-viewer
+                id="mv-model-secondary"
+                data-src="./migu/miku.glb"
+                alt="MikuModel"
+                camera-controls rotation-speed="20deg"
+                environment-image="legacy" tone-mapping="neutral" exposure="0.9"
+                shadow-intensity="0.45" shadow-softness="0.2"
+                camera-target="0m 0.9m 0m" camera-orbit="-0deg 0deg 5m" field-of-view="28deg"
+                min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 20m"
+                animation-name="Chibi_Combined" autoplay animation-crossfade-duration="300"
+                disable-zoom interaction-prompt="none">
+                <effect-composer render-mode="performance">
+                    <ssao-effect strength="2.6"></ssao-effect>
+                    <outline-effect
+                        color="#12100f"
+                        edge-strength="6"
+                        blur
+                        x-ray="false">
+                    </outline-effect>
+                    <pixelate-effect granularity="4"></pixelate-effect>
+                    <color-grade-effect
+                        tonemapping="reinhard"
+                        contrast="0.28"
+                        saturation="0.24"
+                        brightness="-0.015">
+                    </color-grade-effect>
+                </effect-composer>
+            </model-viewer>
+            <svg class="model-frame-border secondary-model-frame-border" viewBox="0 0 240 265" preserveAspectRatio="none" aria-hidden="true">
+                <path class="secondary-model-frame-edge" d="M 238 24 L 238 263 L 2 171 L 48 2"></path>
+            </svg>
+        </div>
+        <div class="miku-credit">miratsu / 新生帝国野餐队队长</div>
     </div>
 
     <div class="dialogue-container parallax-layer" data-speed="0.05" data-constrain="true">
@@ -79,10 +130,28 @@
         <model-viewer
             id="mv-model"
             data-src="./dangoo.glb"
-            camera-controls rotation-speed="20deg" shadow-intensity="1" exposure="1"
-            camera-target="0m 0m 0m" camera-orbit="-180deg 60deg 14m" field-of-view="30deg"
+            alt="Rotatable 3D dango model"
+            camera-controls rotation-speed="20deg"
+            environment-image="legacy" tone-mapping="neutral" exposure="0.9"
+            shadow-intensity="0.45" shadow-softness="0.2"
+            camera-target="0m 0m 0m" camera-orbit="-180deg 75deg 5m" field-of-view="30deg"
+            min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 20m"
             disable-zoom interaction-prompt="none">
+            <effect-composer render-mode="performance">
+                <ssao-effect strength="2.6"></ssao-effect>
+                <pixelate-effect granularity="4"></pixelate-effect>
+                <color-grade-effect
+                    tonemapping="reinhard"
+                    contrast="0.12"
+                    saturation="0.1"
+                    brightness="-0.015">
+                </color-grade-effect>
+            </effect-composer>
         </model-viewer>
+        <svg class="model-frame-border" viewBox="0 0 270 320" preserveAspectRatio="none" aria-hidden="true">
+            <path class="model-frame-edge-near" d="M 23 286 L 2 2 L 268 34"></path>
+            <path class="model-frame-edge-far" d="M 268 34 L 248 317 L 23 286"></path>
+        </svg>
     </div>
 
     <div id="screen-pet-1" class="screen-pet" data-color="var(--pink)">
@@ -106,6 +175,6 @@
         </div>
     </div>
 
-    <script type="module" src="./js/app.js?v=51"></script>
+    <script type="module" src="./js/app.js?v=64"></script>
 </body>
 </html>
