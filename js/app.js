@@ -1,4 +1,4 @@
-        let audioContext = null;
+let audioContext = null;
         function getAudioContext() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -47,6 +47,28 @@
             }));
         }
         loadKanjiStrokes();
+
+        const clockWidget = document.querySelector('.p5-clock-widget');
+        async function lockClockDimensions() {
+            if (!clockWidget) return;
+            if (document.fonts?.ready) await document.fonts.ready;
+
+            clockWidget.style.width = '';
+            clockWidget.style.height = '';
+            clockWidget.style.boxSizing = '';
+
+            const { width, height } = clockWidget.getBoundingClientRect();
+            clockWidget.style.boxSizing = 'border-box';
+            clockWidget.style.width = `${width}px`;
+            clockWidget.style.height = `${height}px`;
+        }
+        lockClockDimensions();
+
+        let clockResizeFrame = 0;
+        window.addEventListener('resize', () => {
+            cancelAnimationFrame(clockResizeFrame);
+            clockResizeFrame = requestAnimationFrame(lockClockDimensions);
+        });
 
         const parallaxLayers = document.querySelectorAll('.parallax-layer');
         const parallaxItems = Array.from(parallaxLayers).map(layer => ({
@@ -375,41 +397,105 @@
             });
         });
 
-        const modelViewer = document.getElementById('mv-model');
-        const loaderOverlay = document.getElementById('model-loader');
-        let modelLoadingTimer;
+        const modelViewerConfigs = [
+            {
+                viewer: document.getElementById('mv-model'),
+                loader: document.getElementById('model-loader'),
+                loadedLabel: '3D model loaded',
+                loadingTimer: null,
+                cameraOrbit: '-180deg 75deg 5m',
+                minCameraOrbit: 'auto auto 1m',
+                maxCameraOrbit: 'auto auto 20m',
+                cameraTarget: '0m 0m 0m',
+                fieldOfView: '30deg'
+            },
+            {
+                viewer: document.getElementById('mv-model-secondary'),
+                loader: document.getElementById('model-loader-secondary'),
+                loadedLabel: 'Secondary 3D model loaded',
+                loadingTimer: null,
+                cameraOrbit: '180deg 90deg 18m',
+                minCameraOrbit: 'auto auto 1m',
+                maxCameraOrbit: 'auto auto 20m',
+                cameraTarget: '0m 0.9m 0m',
+                fieldOfView: '15deg'
+            }
+        ].filter(({ viewer, loader }) => viewer && loader);
 
-        function finishModelLoading() {
-            clearTimeout(modelLoadingTimer);
-            loaderOverlay.classList.add('hidden');
-            loaderOverlay.setAttribute('aria-label', '3D model loaded');
+        function applyRetroModelMaterials(viewer, config) {
+            const materials = viewer.model?.materials || [];
+
+            materials.forEach((material) => {
+                const pbr = material.pbrMetallicRoughness;
+                pbr.setMetallicFactor(0);
+                pbr.setRoughnessFactor(0.62);
+                material.setSpecularFactor?.(0.38);
+                material.setClearcoatFactor?.(0);
+                material.setTransmissionFactor?.(0);
+            });
+
+            if (config?.minCameraOrbit) viewer.minCameraOrbit = config.minCameraOrbit;
+            if (config?.maxCameraOrbit) viewer.maxCameraOrbit = config.maxCameraOrbit;
+            if (config?.cameraOrbit) viewer.cameraOrbit = config.cameraOrbit;
+            if (config?.cameraTarget) viewer.cameraTarget = config.cameraTarget;
+            if (config?.fieldOfView) viewer.fieldOfView = config.fieldOfView;
+            viewer.jumpCameraToGoal();
+            viewer.classList.add('render-ready');
         }
 
-        modelViewer.addEventListener('load', finishModelLoading);
-        modelViewer.addEventListener('error', finishModelLoading);
-        modelViewer.addEventListener('progress', (event) => {
-            if (event.detail?.totalProgress >= 1) finishModelLoading();
+        function finishModelLoading(config) {
+            clearTimeout(config.loadingTimer);
+            config.loader.classList.add('hidden');
+            config.loader.setAttribute('aria-label', config.loadedLabel);
+        }
+
+        function playModelAnimations(viewer) {
+            if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
+                viewer.play({ repetitions: Infinity });
+            }
+        }
+
+        modelViewerConfigs.forEach((config) => {
+            config.viewer.addEventListener('load', () => {
+                applyRetroModelMaterials(config.viewer, config);
+                playModelAnimations(config.viewer);
+                finishModelLoading(config);
+            });
+            config.viewer.addEventListener('error', () => finishModelLoading(config));
+            config.viewer.addEventListener('progress', (event) => {
+                if (event.detail?.totalProgress >= 1) finishModelLoading(config);
+            });
         });
 
         let modelViewerStarted = false;
         async function startModelViewer() {
             if (modelViewerStarted || window.innerWidth <= 400) return;
             modelViewerStarted = true;
-            modelLoadingTimer = setTimeout(finishModelLoading, 12000);
+            modelViewerConfigs.forEach((config) => {
+                config.loadingTimer = setTimeout(() => finishModelLoading(config), 12000);
+            });
             try {
-                await import('https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js');
+                await import('https://cdn.jsdelivr.net/npm/@google/model-viewer@4.3.1/dist/model-viewer-module.min.js');
                 await customElements.whenDefined('model-viewer');
-                modelViewer.src = modelViewer.dataset.src;
-                if (modelViewer.loaded) finishModelLoading();
+
+                try {
+                    await import('https://cdn.jsdelivr.net/npm/@google/model-viewer-effects@1.5.0/dist/model-viewer-effects.min.js');
+                    await customElements.whenDefined('effect-composer');
+                } catch (error) {
+                    console.warn('Retro model post-processing could not be loaded.', error);
+                }
+
+                modelViewerConfigs.forEach((config) => {
+                    config.viewer.src = config.viewer.dataset.src;
+                    if (config.viewer.loaded) finishModelLoading(config);
+                });
             } catch (error) {
-                finishModelLoading();
+                modelViewerConfigs.forEach(finishModelLoading);
                 console.warn('3D model viewer could not be loaded.', error);
             }
         }
         startModelViewer();
         window.addEventListener('resize', startModelViewer, { passive: true });
-        modelViewer.addEventListener('mouseenter', () => { modelViewer.autoRotate = true; });
-        modelViewer.addEventListener('mouseleave', () => { modelViewer.autoRotate = false; });
 
         let parallaxFramePending = false;
         let parallaxActiveUntil = 0;
