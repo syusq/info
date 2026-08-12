@@ -19,7 +19,7 @@ export const dialogues = [
     { speaker: "NAGISA", text: "I thought I would do it after class. If I know what is there, perhaps I can plan something small for recruitment." },
     { speaker: "NAGISA", text: "If you are not busy—" },
     { speaker: "TOMOYA", text: "I’m extremely busy." },
-    { speaker: "TOMOYA", text: "I have to avoid class, annoy Sunohara, stare out a window, and preserve my reputation. It’s a packed schedule you know." },
+    { speaker: "TOMOYA", text: "I have to avoid class, annoy Sunohara and preserve my reputation. It’s a packed schedule you know." },
     { speaker: "NAGISA", text: "Would the preservation of your reputation allow thirty minutes for the drama club?" },
     { speaker: "TOMOYA", text: "Twenty." },
     { speaker: "NAGISA", text: "Twenty-five?" },
