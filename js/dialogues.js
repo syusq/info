@@ -29,4 +29,5 @@ export const dialogues = [
     { speaker: "NAGISA", text: "Then I will bring you one of today's breads as thanks." },
     { speaker: "TOMOYA", text: "A normal one?" },
     { speaker: "NAGISA", text: "A normal one." },
-    { speaker: "NAGISA", text: "Thank you very much." },
+    { speaker: "NAGISA", text: "Thank you very much." }
+];
