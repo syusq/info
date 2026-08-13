@@ -469,7 +469,7 @@ let audioContext = null;
 
         let modelViewerStarted = false;
         async function startModelViewer() {
-            if (modelViewerStarted || window.innerWidth <= 400) return;
+            if (modelViewerStarted) return;
             modelViewerStarted = true;
             modelViewerConfigs.forEach((config) => {
                 config.loadingTimer = setTimeout(() => finishModelLoading(config), 12000);

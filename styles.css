@@ -244,7 +244,10 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             background: var(--black); font-family: 'Exo 2', sans-serif;
             overflow: hidden; color: white; perspective: 1000px;
+            overscroll-behavior: none;
         }
+
+        body { min-height: 100dvh; }
 
         .aberration {
             position: relative;
@@ -419,6 +422,11 @@
         .message-text {
             font-size: 1.5rem; line-height: 1.2; color: #eee; margin-top: 5px;
             transition: opacity 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .text-content {
+            min-width: 0;
+            overflow-wrap: anywhere;
         }
 
         .dialogue-box:hover .diva-label { text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.9), 0 0 5px rgba(57, 197, 187, 0.42); }
@@ -792,40 +800,323 @@
             filter: brightness(1.15) drop-shadow(0 0 10px rgba(255, 120, 120, 0.3));
         }
 
-        @media (max-width: 768px) {
-            .model-container { width: 150px; height: 180px; top: 10px; left: 10px; }
-            .secondary-model-container { top: 105px; right: -20px; width: 240px; height: 265px; }
-            .p5-clock-widget { padding: 40px 60px 20px 40px; top: -30px; right: -30px; }
-            .time-text { font-size: 2.2rem; }
-            .date-text { font-size: 0.9rem; }
+        /* The 1920x1080 rules above are the reference composition. */
+        @media (max-width: 1440px) {
+            .p5-clock-widget {
+                top: -44px;
+                right: -44px;
+                padding: 60px 94px 34px 52px;
+            }
+            .time-text { font-size: 3.1rem; }
+            .date-text { font-size: 1.1rem; }
 
-            .dialogue-container {
-                bottom: 10px;
-                left: 5px;
-                width: calc(100vw - 80px);
-                max-width: calc(100vw - 80px);
-                padding: 0;
-                transform: scale(0.9);
-                transform-origin: bottom left;
-                z-index: 210;
+            .secondary-model-container {
+                top: 92px;
+                right: -17px;
+                width: 211px;
+                height: 233px;
+            }
+            .miku-credit {
+                top: 86px;
+                right: 155px;
+                font-size: 9.7px;
             }
 
-            .box-inner { padding: 15px 20px; gap: 15px; }
-            .avatar-circle { width: 80px; height: 80px; }
-            .message-text { font-size: 1.1rem; }
+            .model-container {
+                top: 20px;
+                left: 20px;
+                width: 230px;
+                height: 272px;
+            }
+
+            .dialogue-container {
+                bottom: -40px;
+                left: -40px;
+                width: 640px;
+                padding: 0 0 60px 60px;
+            }
+            .box-inner { padding: 24px 30px; gap: 24px; }
+            .avatar-circle { width: 104px; height: 104px; }
+            .message-text { font-size: 1.3rem; }
+        }
+
+        @media (max-width: 1024px) {
+            .p5-clock-widget {
+                top: -36px;
+                right: -34px;
+                padding: 51px 76px 27px 44px;
+            }
+            .time-text { font-size: 2.7rem; }
+            .date-text { font-size: 0.95rem; letter-spacing: 1.6px; }
+
+            .secondary-model-container {
+                top: 80px;
+                right: -15px;
+                width: 182px;
+                height: 201px;
+            }
+            .miku-credit {
+                top: 75px;
+                right: 134px;
+                font-size: 8.35px;
+            }
+
+            .model-container {
+                top: 16px;
+                left: 16px;
+                width: 190px;
+                height: 225px;
+            }
+
+            .dialogue-container {
+                bottom: 12px;
+                left: 12px;
+                width: min(570px, calc(100vw - 170px));
+                max-width: none;
+                padding: 0;
+            }
+            .box-inner { padding: 20px 24px; gap: 20px; }
+            .avatar-circle { width: 90px; height: 90px; }
+            .message-text { font-size: 1.15rem; }
+
+            .bg-controls {
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .p5-clock-widget {
+                top: -28px;
+                right: -24px;
+                padding: 40px 56px 22px 38px;
+            }
+            .time-text { font-size: 2.2rem; }
+            .date-text { font-size: 0.8rem; letter-spacing: 1.3px; }
+
+            .secondary-model-container {
+                top: 65px;
+                right: -12px;
+                width: 156px;
+                height: 172px;
+            }
+            .miku-credit {
+                top: 62px;
+                right: 114px;
+                font-size: 7.15px;
+            }
+
+            .model-container {
+                top: max(10px, env(safe-area-inset-top));
+                left: max(10px, env(safe-area-inset-left));
+                width: 150px;
+                height: 178px;
+            }
+
+            .dialogue-container {
+                bottom: max(8px, env(safe-area-inset-bottom));
+                left: max(8px, env(safe-area-inset-left));
+                width: calc(100vw - 72px - env(safe-area-inset-left) - env(safe-area-inset-right));
+                max-width: none;
+                padding: 0;
+                z-index: 210;
+            }
+            .social-links { zoom: 0.7; }
+            .box-inner { padding: 14px 17px; gap: 13px; }
+            .avatar-circle { width: 68px; height: 68px; border-width: 3px; }
+            .diva-label { font-size: 1.05rem; }
+            .diva-label:not(:empty) { padding: 5px 15px 4px 12px; }
+            .message-text { font-size: 1rem; line-height: 1.15; }
 
             .bg-controls {
                 top: auto;
-                bottom: 120px;
-                right: 10px;
+                bottom: max(8px, env(safe-area-inset-bottom));
+                right: max(8px, env(safe-area-inset-right));
+                gap: 6px;
                 z-index: 200;
             }
-            .bg-buttons { flex-direction: column; }
+            .bg-buttons { flex-direction: column; gap: 5px; }
+            .bg-btn {
+                width: 26px;
+                height: 26px;
+                border-width: 1.5px;
+                font-size: 0.76rem;
+            }
+            .copyright-widget {
+                max-width: none;
+                font-size: 0.62rem;
+                line-height: 1;
+                letter-spacing: 1px;
+                white-space: nowrap;
+            }
+
+            .screen-pet { width: 52px; height: 52px; }
+            #screen-pet-3 { width: 34px !important; height: 34px !important; }
         }
 
-        @media (max-width: 400px) {
-            .dialogue-container { transform: scale(0.75); width: calc(100vw - 65px); }
-            .model-container, .secondary-model-container { display: none; }
+        @media (max-width: 480px) {
+            .p5-clock-widget {
+                top: -22px;
+                right: -18px;
+                padding: 32px 42px 18px 30px;
+            }
+            .time-text { font-size: 1.8rem; }
+            .date-text { font-size: 0.68rem; letter-spacing: 1px; }
+
+            .secondary-model-container {
+                top: 52px;
+                right: -10px;
+                width: 125px;
+                height: 138px;
+            }
+            .miku-credit {
+                top: 50px;
+                right: 92px;
+                font-size: 5.75px;
+            }
+
+            .model-container { display: none; }
+
+            .dialogue-container {
+                width: calc(100vw - 58px - env(safe-area-inset-left) - env(safe-area-inset-right));
+            }
+            .social-links { zoom: 0.58; }
+            .dialogue-box { padding: 3px; }
+            .box-inner { padding: 11px 12px; gap: 9px; }
+            .avatar-circle { width: 54px; height: 54px; }
+            .diva-label { font-size: 0.9rem; }
+            .diva-label:not(:empty) { padding: 4px 11px 3px 9px; }
+            .message-text { font-size: 0.86rem; }
+
+            .bg-btn { width: 23px; height: 23px; font-size: 0.7rem; }
+            .copyright-widget { display: block; font-size: 0.58rem; }
+        }
+
+        @media (max-width: 360px) {
+            .p5-clock-widget {
+                top: -18px;
+                right: -15px;
+                padding: 27px 35px 15px 26px;
+            }
+            .time-text { font-size: 1.55rem; }
+            .date-text { font-size: 0.6rem; }
+
+            .secondary-model-container {
+                top: 45px;
+                right: -9px;
+                width: 108px;
+                height: 119px;
+            }
+            .miku-credit {
+                top: 44px;
+                right: 79px;
+                font-size: 5px;
+            }
+
+            .dialogue-container { width: calc(100vw - 54px); }
+            .social-links { zoom: 0.52; }
+            .box-inner { padding: 9px 10px; gap: 7px; }
+            .avatar-circle { width: 46px; height: 46px; }
+            .message-text { font-size: 0.8rem; }
+            .bg-btn { width: 21px; height: 21px; font-size: 0.66rem; }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            .p5-clock-widget {
+                top: -22px;
+                right: -18px;
+                padding: 32px 44px 17px 30px;
+            }
+            .time-text { font-size: 1.85rem; }
+            .date-text { font-size: 0.7rem; }
+
+            .secondary-model-container {
+                top: 50px;
+                right: -10px;
+                width: 120px;
+                height: 133px;
+            }
+            .miku-credit {
+                top: 49px;
+                right: 88px;
+                font-size: 5.5px;
+            }
+
+            .model-container {
+                display: block;
+                top: 8px;
+                left: max(8px, env(safe-area-inset-left));
+                width: 110px;
+                height: 130px;
+            }
+
+            .dialogue-container {
+                bottom: max(6px, env(safe-area-inset-bottom));
+                left: max(8px, env(safe-area-inset-left));
+                width: min(520px, calc(100vw - 220px));
+            }
+            .social-links { zoom: 0.58; }
+            .box-inner { padding: 9px 12px; gap: 9px; }
+            .avatar-circle { width: 50px; height: 50px; }
+            .message-text { font-size: 0.82rem; }
+
+            .bg-controls {
+                bottom: max(8px, env(safe-area-inset-bottom));
+                right: max(8px, env(safe-area-inset-right));
+            }
+            .bg-buttons { flex-direction: row; gap: 4px; }
+            .bg-btn { width: 23px; height: 23px; font-size: 0.7rem; }
+            .copyright-widget { display: block; font-size: 0.58rem; }
+        }
+
+        @media (hover: none) and (pointer: coarse) and (orientation: landscape) and (min-width: 769px) and (max-width: 1366px) {
+            .dialogue-container {
+                bottom: max(12px, env(safe-area-inset-bottom));
+                left: max(12px, env(safe-area-inset-left));
+                width: min(620px, calc(100vw - 300px));
+                max-width: none;
+                padding: 0;
+            }
+
+            .bg-controls {
+                bottom: max(16px, env(safe-area-inset-bottom));
+                right: max(16px, env(safe-area-inset-right));
+                gap: 7px;
+            }
+            .bg-buttons { flex-direction: row; gap: 7px; }
+            .bg-btn { width: 26px; height: 26px; font-size: 0.76rem; }
+            .copyright-widget {
+                display: block;
+                max-width: none;
+                font-size: 0.62rem;
+                line-height: 1;
+                white-space: nowrap;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) and (orientation: portrait) and (min-width: 769px) and (max-width: 1024px) {
+            .dialogue-container {
+                bottom: max(12px, env(safe-area-inset-bottom));
+                left: max(12px, env(safe-area-inset-left));
+                width: calc(100vw - 82px - env(safe-area-inset-left) - env(safe-area-inset-right));
+                max-width: none;
+                padding: 0;
+            }
+
+            .bg-controls {
+                bottom: max(12px, env(safe-area-inset-bottom));
+                right: max(12px, env(safe-area-inset-right));
+                gap: 6px;
+            }
+            .bg-buttons { flex-direction: column; gap: 5px; }
+            .bg-btn { width: 26px; height: 26px; font-size: 0.76rem; }
+            .copyright-widget {
+                display: block;
+                max-width: none;
+                font-size: 0.62rem;
+                line-height: 1;
+                white-space: nowrap;
+            }
         }
 
         .social-btn-inner:hover,
