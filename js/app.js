@@ -18,6 +18,42 @@ let audioContext = null;
         window.addEventListener('keydown', initializeAudio, true);
         window.addEventListener('touchstart', initializeAudio, { capture: true, passive: true });
         const customCursor = document.getElementById('custom-cursor');
+        const startupCurtain = document.getElementById('startup-curtain');
+        const startupPending = new Set(['window', 'fonts', 'models']);
+        let startupRevealStarted = false;
+
+        function revealStartupCurtain() {
+            if (startupRevealStarted || !startupCurtain) return;
+            startupRevealStarted = true;
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setTimeout(() => startupCurtain.classList.add('is-ready'), 120);
+                });
+            });
+        }
+
+        function markStartupReady(task) {
+            startupPending.delete(task);
+            if (startupPending.size === 0) revealStartupCurtain();
+        }
+
+        if (document.readyState === 'complete') {
+            markStartupReady('window');
+        } else {
+            window.addEventListener('load', () => markStartupReady('window'), { once: true });
+        }
+
+        if (document.fonts?.ready) {
+            document.fonts.ready.then(
+                () => markStartupReady('fonts'),
+                () => markStartupReady('fonts')
+            );
+        } else {
+            markStartupReady('fonts');
+        }
+
+        startupCurtain?.addEventListener('animationend', () => startupCurtain.remove(), { once: true });
+        setTimeout(revealStartupCurtain, 8000);
 
         async function loadKanjiStrokes() {
             const kanjiElements = document.querySelectorAll('.kanji-strokes');
@@ -213,7 +249,7 @@ let audioContext = null;
         }
         setupHoverSFX();
 
-        import { backgrounds, copyrightInfo, reactionGifs } from './content.js?v=26';
+        import { backgrounds, copyrightInfo, reactionGifs } from './content.js?v=27';
         import { dialogues } from './dialogues.js?v=16';
 
         let currentDialogueIndex = 0;
@@ -372,6 +408,7 @@ let audioContext = null;
 
         backgroundLayerOne.style.backgroundImage = `url('${backgrounds[0]}')`;
         setActiveButton(0);
+        document.getElementById('copyright-text').innerText = copyrightInfo[0];
         startBackgroundRotation();
 
         document.addEventListener('visibilitychange', () => {
@@ -403,6 +440,7 @@ let audioContext = null;
                 loader: document.getElementById('model-loader'),
                 loadedLabel: '3D model loaded',
                 loadingTimer: null,
+                startupSettled: false,
                 cameraOrbit: '-180deg 75deg 5m',
                 minCameraOrbit: 'auto auto 1m',
                 maxCameraOrbit: 'auto auto 20m',
@@ -414,6 +452,7 @@ let audioContext = null;
                 loader: document.getElementById('model-loader-secondary'),
                 loadedLabel: 'Secondary 3D model loaded',
                 loadingTimer: null,
+                startupSettled: false,
                 cameraOrbit: '180deg 90deg 18m',
                 minCameraOrbit: 'auto auto 1m',
                 maxCameraOrbit: 'auto auto 20m',
@@ -449,6 +488,14 @@ let audioContext = null;
             config.loader.setAttribute('aria-label', config.loadedLabel);
         }
 
+        function settleModelForStartup(config) {
+            if (config.startupSettled) return;
+            config.startupSettled = true;
+            if (modelViewerConfigs.every((item) => item.startupSettled)) {
+                markStartupReady('models');
+            }
+        }
+
         function playModelAnimations(viewer) {
             if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
                 viewer.play({ repetitions: Infinity });
@@ -460,8 +507,12 @@ let audioContext = null;
                 applyRetroModelMaterials(config.viewer, config);
                 playModelAnimations(config.viewer);
                 finishModelLoading(config);
+                settleModelForStartup(config);
             });
-            config.viewer.addEventListener('error', () => finishModelLoading(config));
+            config.viewer.addEventListener('error', () => {
+                finishModelLoading(config);
+                settleModelForStartup(config);
+            });
             config.viewer.addEventListener('progress', (event) => {
                 if (event.detail?.totalProgress >= 1) finishModelLoading(config);
             });
@@ -472,7 +523,10 @@ let audioContext = null;
             if (modelViewerStarted) return;
             modelViewerStarted = true;
             modelViewerConfigs.forEach((config) => {
-                config.loadingTimer = setTimeout(() => finishModelLoading(config), 12000);
+                config.loadingTimer = setTimeout(() => {
+                    finishModelLoading(config);
+                    settleModelForStartup(config);
+                }, 12000);
             });
             try {
                 await import('https://cdn.jsdelivr.net/npm/@google/model-viewer@4.3.1/dist/model-viewer-module.min.js');
@@ -487,10 +541,16 @@ let audioContext = null;
 
                 modelViewerConfigs.forEach((config) => {
                     config.viewer.src = config.viewer.dataset.src;
-                    if (config.viewer.loaded) finishModelLoading(config);
+                    if (config.viewer.loaded) {
+                        finishModelLoading(config);
+                        settleModelForStartup(config);
+                    }
                 });
             } catch (error) {
-                modelViewerConfigs.forEach(finishModelLoading);
+                modelViewerConfigs.forEach((config) => {
+                    finishModelLoading(config);
+                    settleModelForStartup(config);
+                });
                 console.warn('3D model viewer could not be loaded.', error);
             }
         }

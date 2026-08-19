@@ -7,6 +7,41 @@
             --green: #88D57B;
         }
 
+        #startup-curtain {
+            position: fixed;
+            inset: 0;
+            z-index: 2147483647;
+            background: #000;
+            pointer-events: none;
+            opacity: 1;
+            will-change: opacity;
+            animation: startupCurtainFallback 0.9s ease-out 8s forwards;
+        }
+
+        #startup-curtain.is-ready {
+            animation: startupCurtainReveal 0.9s ease-out forwards;
+        }
+
+        @keyframes startupCurtainReveal {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes startupCurtainFallback {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .p5-paper-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            width: 62px;
+            height: 62px;
+            transform: translate(-50%, -50%);
+        }
+
         .crt-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background:

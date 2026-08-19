@@ -1,0 +1,72 @@
+.paper-ring {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 0 !important;
+    border-radius: 0 !important;
+    contain: layout paint;
+    isolation: isolate;
+}
+
+.paper-ring::before,
+.paper-ring::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    -webkit-mask-image: radial-gradient(
+        circle at 50% 50%,
+        transparent 0 26px,
+        black 27px 100%
+    );
+    mask-image: radial-gradient(
+        circle at 50% 50%,
+        transparent 0 26px,
+        black 27px 100%
+    );
+}
+
+.paper-ring::before {
+    inset: 0;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.paper-ring::after {
+    inset: 0;
+    z-index: 3;
+    background: conic-gradient(
+        from -35deg,
+        white 0deg 140deg,
+        transparent 140deg 360deg
+    );
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform-origin: 50% 50%;
+    will-change: transform;
+    backface-visibility: hidden;
+    animation: paper-spin 0.85s linear infinite;
+}
+
+.paper-loader-media {
+    position: absolute;
+    inset: 5px;
+    z-index: 1;
+    display: block;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border: 0 !important;
+    border-radius: 50%;
+    outline: 0;
+    box-shadow: none;
+    background: transparent !important;
+    object-fit: cover;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+@keyframes paper-spin {
+    to { transform: translate3d(0, 0, 0) rotate(360deg); }
+}

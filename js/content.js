@@ -25,7 +25,6 @@ export const backgrounds = [
             'https://media1.tenor.com/m/3SJrBPHrsJYAAAAd/shinji.gif',
             'https://media1.tenor.com/m/ck2dxqKEeckAAAAC/azumanga-daioh-osaka.gif',
             'https://media1.tenor.com/m/2MMjDZ0NGK0AAAAC/lain.gif',
-            'https://media1.tenor.com/m/73pahpIwaMYAAAAC/kita-ikuyo-boc.gif',
             'https://media1.tenor.com/m/b8O1MpygcN8AAAAC/yu-narukami-persona4.gif',
             'https://media.tenor.com/dnJj4Uu98tUAAAAM/snake-metal-gear-solid.gif',
             'https://media1.tenor.com/m/eNB1fns-_dsAAAAd/jetstream-sam-metal-gear-rising.gif',
