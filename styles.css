@@ -724,7 +724,7 @@
             z-index: 1;
             width: 100%; height: 100%;
             --poster-color: transparent;
-            filter: saturate(1.08) contrast(1.04);
+            filter: saturate(1.04) contrast(1.02);
             opacity: 0;
             transition: opacity 0.12s steps(2, end), filter 0.3s ease;
         }
@@ -735,7 +735,7 @@
 
         .model-container:hover model-viewer,
         .secondary-model-container:hover model-viewer {
-            filter: saturate(1.16) contrast(1.08) brightness(1.05);
+            filter: saturate(1.09) contrast(1.04) brightness(1.025);
         }
 
         .model-frame-border {
@@ -908,7 +908,8 @@
             height: 100%;
             object-fit: contain;
             display: none;
-            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
         }
 
         .screen-pet.kissing .pet-sprite-container {
@@ -1287,6 +1288,10 @@
             text-shadow: 0 0 5px rgba(57,197,187,0.35);
         }
 
+        .clock-model-group > .secondary-model-container {
+            right: -22px;
+        }
+
         /* Keep the rig mount scoped to whichever widget contains it. */
         .model-container > .rig-frame {
             position: absolute;
@@ -1302,7 +1307,7 @@
 
         .dialogue-box > .rig-frame {
             position: absolute;
-            inset: auto -4px -4px auto;
+            inset: auto -4px -8px auto;
             width: 30%;
             min-width: 0;
             height: auto;
@@ -1313,11 +1318,11 @@
         .dialogue-box > .box-inner { padding-right: 22%; }
 
         @media (max-width: 768px) {
-            .dialogue-box > .rig-frame { right: -2px; bottom: -3px; }
+            .dialogue-box > .rig-frame { right: -2px; bottom: -7px; }
         }
 
         @media (max-width: 480px) {
-            .dialogue-box > .rig-frame { right: -1px; bottom: -2px; }
+            .dialogue-box > .rig-frame { right: -1px; bottom: -6px; }
         }
 
         .time-text:hover,

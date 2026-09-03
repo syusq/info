@@ -16,17 +16,16 @@
     <link rel="preload" as="image" href="https://media1.tenor.com/m/luur17rklVkAAAAC/kasane-teto-teto.gif" fetchpriority="high">
     <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
-    <script src="./js/importmap.js?v=1"></script>
-    <link rel="stylesheet" href="./styles.css?v=173">
+    <script src="./js/importmap.js?v=2"></script>
+    <link rel="stylesheet" href="./styles.css?v=179">
 </head>
 <body>
 
     <div id="startup-curtain" aria-hidden="true">
         <paper-spinner class="p5-paper-loader">
             <template shadowrootmode="open">
-                <link rel="stylesheet" href="./assets/vendor/papercss-1.9.2.min.css">
                 <link rel="stylesheet" href="./assets/paper-loader-shadow.css?v=17">
-                <span class="paper-ring border border-3 border-white">
+                <span class="paper-ring">
                     <img class="paper-loader-media" src="./assets/bocchi-loader.gif?v=1" alt="" draggable="false" decoding="async" fetchpriority="high">
                 </span>
             </template>
@@ -66,19 +65,18 @@
                 animation-name="Chibi_Combined" autoplay animation-crossfade-duration="300"
                 disable-zoom interaction-prompt="none">
                 <effect-composer render-mode="performance">
-                    <ssao-effect strength="2.6"></ssao-effect>
+                    <ssao-effect strength="1.6"></ssao-effect>
                     <outline-effect
                         color="#12100f"
-                        edge-strength="6"
+                        edge-strength="4"
                         blur
                         x-ray="false">
                     </outline-effect>
-                    <pixelate-effect granularity="4"></pixelate-effect>
                     <color-grade-effect
                         tonemapping="reinhard"
-                        contrast="0.28"
-                        saturation="0.24"
-                        brightness="-0.015">
+                        contrast="0.18"
+                        saturation="0.14"
+                        brightness="-0.008">
                     </color-grade-effect>
                 </effect-composer>
             </model-viewer>
@@ -116,8 +114,8 @@
                 <vn-vector-rig
                     id="dialogue-character"
                     class="dialogue-character"
-                    asset="./rig/character-rig.svg"
-                    manifest="./rig/rig.json"
+                    asset="./rig/character-rig.svg?v=2"
+                    manifest="./rig/rig.json?v=2"
                     preset="neutral">
                 </vn-vector-rig>
             </div>
@@ -155,13 +153,13 @@
             min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 20m"
             disable-zoom interaction-prompt="none">
             <effect-composer render-mode="performance">
-                <ssao-effect strength="2.6"></ssao-effect>
-                <pixelate-effect granularity="4"></pixelate-effect>
+                <ssao-effect strength="1.5"></ssao-effect>
+                <pixelate-effect granularity="1.5"></pixelate-effect>
                 <color-grade-effect
                     tonemapping="reinhard"
-                    contrast="0.12"
-                    saturation="0.1"
-                    brightness="-0.015">
+                    contrast="0.06"
+                    saturation="0.04"
+                    brightness="-0.008">
                 </color-grade-effect>
             </effect-composer>
         </model-viewer>
@@ -192,6 +190,6 @@
         </div>
     </div>
 
-    <script type="module" src="./js/app.js?v=86"></script>
+    <script type="module" src="./js/app.js?v=93"></script>
 </body>
 </html>

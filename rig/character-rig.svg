@@ -5,7 +5,6 @@
   <g id="rig-root" data-rig-part="root" data-pivot-x="517" data-pivot-y="760">
     <g id="part-base" data-rig-part="base" data-pivot-x="517" data-pivot-y="760">
       <g id="base-crossed" data-variant="crossed"><image href="assets/base-crossed.png" xlink:href="assets/base-crossed.png" width="1123" height="1401"/></g>
-      <g id="base-relaxed" data-variant="relaxed" style="display:none"><image href="assets/base-relaxed.png" xlink:href="assets/base-relaxed.png" width="1123" height="1401"/></g>
       <g id="base-wave" data-variant="wave" style="display:none"><image href="assets/base-wave.png" xlink:href="assets/base-wave.png" width="1123" height="1401"/></g>
     </g>
     <g id="part-face" data-rig-part="face" data-pivot-x="517" data-pivot-y="455">

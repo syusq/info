@@ -7,7 +7,7 @@
     "root": { "selector": "#rig-root", "pivot": [517, 760], "editable": true },
     "base": {
       "selector": "#part-base", "pivot": [517, 760], "editable": true,
-      "variants": ["crossed", "relaxed", "wave"], "default": "crossed"
+      "variants": ["crossed", "wave"], "default": "crossed"
     },
     "face": { "selector": "#part-face", "pivot": [517, 455], "editable": true },
     "eyes": {

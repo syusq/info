@@ -5,7 +5,7 @@ This package uses the generated character artwork directly. An SVG container kee
 ## Files
 
 - `character-rig.svg` — layered SVG container
-- `assets/base-*.png` — crossed-arm, relaxed, and raised-hand pose sprites
+- `assets/base-*.png` — crossed-arm and raised-hand pose sprites
 - `assets/face-overlay.png` — stable glasses, brows, and blush layer
 - `assets/eyes-*.png` — independently swappable eye sprites
 - `assets/mouth-*.png` — independently swappable mouth sprites

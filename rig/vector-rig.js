@@ -84,9 +84,9 @@ export class VectorRig {
     }
     target.querySelectorAll(":scope > [data-variant]").forEach((node) => {
       const visible = node.getAttribute("data-variant") === variant;
+      node.style.display = "inline";
       node.setAttribute("visibility", visible ? "visible" : "hidden");
       node.style.opacity = visible ? "1" : "0";
-      node.style.display = visible ? "" : "none";
     });
     this.variants[part] = variant;
     return true;

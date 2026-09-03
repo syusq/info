@@ -1,15 +1,17 @@
 let audioContext = null;
-        function getAudioContext() {
+        function getAudioContext(allowCreate = false) {
             if (!audioContext) {
+                if (!allowCreate) return null;
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
-            if (audioContext.state === 'suspended') {
+            if (allowCreate && audioContext.state === 'suspended') {
                 audioContext.resume().catch(() => {});
             }
             return audioContext;
         }
         const initializeAudio = () => {
-            getAudioContext();
+            const context = getAudioContext(true);
+            if (!context) return;
             window.removeEventListener('mousedown', initializeAudio, true);
             window.removeEventListener('keydown', initializeAudio, true);
             window.removeEventListener('touchstart', initializeAudio, true);
@@ -251,7 +253,7 @@ let audioContext = null;
 
         import { backgrounds, copyrightInfo, reactionGifs } from './content.js?v=27';
         import { dialogues } from './dialogues.js?v=18';
-        import '../rig/vector-rig.js?v=4';
+        import '../rig/vector-rig.js?v=5';
 
         let currentDialogueIndex = 0;
         let currentGifIndex = 0;
@@ -284,8 +286,7 @@ let audioContext = null;
         let rigIrritatedUntil = 0;
 
         const rigPoseChoices = [
-            { value: 'crossed', weight: 49 },
-            { value: 'relaxed', weight: 49 },
+            { value: 'crossed', weight: 98 },
             { value: 'wave', weight: 2 }
         ];
 
@@ -738,7 +739,8 @@ let audioContext = null;
                 minCameraOrbit: 'auto auto 1m',
                 maxCameraOrbit: 'auto auto 20m',
                 cameraTarget: '0m 0m 0m',
-                fieldOfView: '30deg'
+                fieldOfView: '30deg',
+                forceOpaque: true
             },
             {
                 viewer: document.getElementById('mv-model-secondary'),
@@ -764,6 +766,12 @@ let audioContext = null;
                 material.setSpecularFactor?.(0.38);
                 material.setClearcoatFactor?.(0);
                 material.setTransmissionFactor?.(0);
+
+                if (config?.forceOpaque) {
+                    const [red, green, blue] = pbr.baseColorFactor;
+                    material.setAlphaMode?.('OPAQUE');
+                    pbr.setBaseColorFactor([red, green, blue, 1]);
+                }
             });
 
             if (config?.minCameraOrbit) viewer.minCameraOrbit = config.minCameraOrbit;
@@ -827,11 +835,11 @@ let audioContext = null;
                 }, 12000);
             });
             try {
-                await import('https://cdn.jsdelivr.net/npm/@google/model-viewer@4.3.1/dist/model-viewer-module.min.js');
+                await import('https://cdn.jsdelivr.net/npm/@google/model-viewer@4.0.0/dist/model-viewer-module.min.js');
                 await customElements.whenDefined('model-viewer');
 
                 try {
-                    await import('https://cdn.jsdelivr.net/npm/@google/model-viewer-effects@1.5.0/dist/model-viewer-effects.min.js');
+                    await import('https://cdn.jsdelivr.net/npm/@google/model-viewer-effects@1.4.0/dist/model-viewer-effects.min.js');
                     await customElements.whenDefined('effect-composer');
                 } catch (error) {
                     console.warn('Retro model post-processing could not be loaded.', error);
