@@ -387,7 +387,7 @@
             clip-path: polygon(0% 10%, 2% 0%, 98% 8%, 100% 25%, 98% 95%, 95% 100%, 0% 100%, 0% 85%);
             filter: drop-shadow(4px 0px 0px rgba(255,0,0,0.5)) drop-shadow(-4px 0px 0px rgba(0,255,255,0.5));
             pointer-events: auto;
-            transition: height 420ms cubic-bezier(0.22, 0.8, 0.28, 1);
+            transition: height 280ms cubic-bezier(0.2, 0.75, 0.25, 1);
         }
 
         .dialogue-box.is-resizing {
@@ -401,6 +401,10 @@
         .dialogue-box.is-measuring {
             height: auto !important;
             transition: none !important;
+        }
+
+        .dialogue-box.is-measuring > .box-inner {
+            height: auto !important;
         }
 
         .box-inner {
@@ -1306,7 +1310,7 @@
             transform: rotate(-8deg);
         }
 
-        .dialogue-box > .box-inner { padding-right: 32%; }
+        .dialogue-box > .box-inner { padding-right: 22%; }
 
         @media (max-width: 768px) {
             .dialogue-box > .rig-frame { right: -2px; bottom: -3px; }

@@ -259,6 +259,8 @@ let audioContext = null;
         let skipTyping = false;
         let isChangingGif = false;
         let typingTimer = null;
+        let dialogueResizeCleanupTimer = null;
+        let dialogueResizeMeasurement = null;
 
         function setSpeakerLabel(element, speaker) {
             element.textContent = speaker;
@@ -484,13 +486,15 @@ let audioContext = null;
         setSpeakerLabel(document.getElementById('speaker-label'), dialogues[0].speaker);
         document.getElementById('dialogue-text').textContent = dialogues[0].text;
 
-        function typeWriter(element, text, speed = 30) {
+        function typeWriter(element, text, speed = 30, onProgress = null) {
             return new Promise((resolve) => {
                 element.textContent = '';
+                onProgress?.();
                 let i = 0;
                 function type() {
                     if (skipTyping) {
                         element.textContent = text;
+                        onProgress?.();
                         resolve();
                         return;
                     }
@@ -498,6 +502,7 @@ let audioContext = null;
                         element.textContent += text.charAt(i);
                         if (text.charAt(i) !== ' ') playTypeSound();
                         i++;
+                        onProgress?.();
                         typingTimer = setTimeout(type, speed);
                     } else {
                         resolve();
@@ -510,27 +515,55 @@ let audioContext = null;
         function beginDialogueResize() {
             const box = document.querySelector('.dialogue-box');
             const startHeight = box.getBoundingClientRect().height;
+            window.clearTimeout(dialogueResizeCleanupTimer);
+            dialogueResizeMeasurement?.remove();
+
+            const measurementBox = box.cloneNode(false);
+            const measurementInner = box.querySelector('.box-inner').cloneNode(true);
+            measurementBox.classList.remove('is-resizing');
+            measurementBox.classList.add('is-measuring');
+            measurementBox.style.position = 'fixed';
+            measurementBox.style.left = '-10000px';
+            measurementBox.style.top = '0';
+            measurementBox.style.width = `${box.getBoundingClientRect().width}px`;
+            measurementBox.style.height = 'auto';
+            measurementBox.style.visibility = 'hidden';
+            measurementBox.style.pointerEvents = 'none';
+            measurementBox.appendChild(measurementInner);
+            document.body.appendChild(measurementBox);
+            dialogueResizeMeasurement = measurementBox;
+
             box.style.height = `${startHeight}px`;
             box.classList.add('is-resizing');
-            return { box, startHeight };
+            return {
+                box,
+                measurementBox,
+                measurementText: measurementBox.querySelector('.message-text'),
+                measurementSpeaker: measurementBox.querySelector('.diva-label'),
+                targetHeight: startHeight
+            };
         }
 
-        function resizeDialogueForText(state, element, text) {
-            state.box.classList.add('is-measuring');
-            element.textContent = text;
-            const targetHeight = state.box.getBoundingClientRect().height;
-            element.textContent = '';
-            state.box.classList.remove('is-measuring');
-            state.box.style.height = `${state.startHeight}px`;
-            void state.box.offsetHeight;
-            window.requestAnimationFrame(() => {
-                state.box.style.height = `${targetHeight}px`;
-            });
+        function resizeDialogueToVisibleText(state) {
+            state.measurementText.textContent = document.getElementById('dialogue-text').textContent;
+            state.measurementSpeaker.textContent = document.getElementById('speaker-label').textContent;
+            const targetHeight = state.measurementBox.getBoundingClientRect().height;
+
+            if (Math.abs(targetHeight - state.targetHeight) < 0.5) return;
+            state.targetHeight = targetHeight;
+            state.box.style.height = `${targetHeight}px`;
         }
 
         function finishDialogueResize(state) {
-            state.box.classList.remove('is-resizing');
-            state.box.style.height = 'auto';
+            window.clearTimeout(dialogueResizeCleanupTimer);
+            dialogueResizeCleanupTimer = window.setTimeout(() => {
+                state.box.classList.remove('is-resizing');
+                state.box.style.height = 'auto';
+                state.measurementBox.remove();
+                if (dialogueResizeMeasurement === state.measurementBox) {
+                    dialogueResizeMeasurement = null;
+                }
+            }, 300);
         }
 
         async function advanceDialogue() {
@@ -554,10 +587,14 @@ let audioContext = null;
             setSpeakerLabel(speakerLabel, dialogue.speaker);
             speakerLabel.style.opacity = '1';
             await new Promise(resolve => setTimeout(resolve, 100));
-            resizeDialogueForText(resizeState, dialogueText, dialogue.text);
             dialogueText.style.opacity = '1';
 
-            await typeWriter(dialogueText, dialogue.text);
+            await typeWriter(
+                dialogueText,
+                dialogue.text,
+                30,
+                () => resizeDialogueToVisibleText(resizeState)
+            );
             finishDialogueResize(resizeState);
             isTyping = false;
             skipTyping = false;
