@@ -271,7 +271,6 @@ let audioContext = null;
 
         const dialogueCharacter = document.getElementById('dialogue-character');
         let dialogueRig = null;
-        let rigPoseTimer = null;
         let rigMoodTimer = null;
         let rigBlinkTimer = null;
         let rigIdleTimer = null;
@@ -284,11 +283,6 @@ let audioContext = null;
         let rigClickHistory = [];
         let rigModelsReady = false;
         let rigIrritatedUntil = 0;
-
-        const rigPoseChoices = [
-            { value: 'crossed', weight: 98 },
-            { value: 'wave', weight: 2 }
-        ];
 
         const rigExpressionChoices = [
             { value: 'neutral', weight: 28 },
@@ -363,23 +357,6 @@ let audioContext = null;
                 if (token !== rigReactionToken || !dialogueRig) return;
                 transitionRig(() => dialogueRig.setPreset(rigMood));
             }, duration);
-        }
-
-        function scheduleRandomRigPose(delay = 12000 + Math.random() * 10000) {
-            window.clearTimeout(rigPoseTimer);
-            rigPoseTimer = window.setTimeout(randomizeRigPose, delay);
-        }
-
-        function randomizeRigPose() {
-            if (dialogueRig && !document.hidden) {
-                const nextPose = pickWeighted(rigPoseChoices, dialogueRig.variants.base);
-                transitionRig(() => dialogueRig.setVariant('base', nextPose));
-                scheduleRandomRigPose(nextPose === 'wave'
-                    ? 2400 + Math.random() * 1200
-                    : 24000 + Math.random() * 24000);
-                return;
-            }
-            scheduleRandomRigPose();
         }
 
         function scheduleRigMood(delay = 15000 + Math.random() * 25000) {
@@ -472,7 +449,6 @@ let audioContext = null;
             rigMood = 'neutral';
             dialogueRig.setPreset(rigModelsReady ? 'happy' : 'concerned');
             setRigLivingMotion();
-            scheduleRandomRigPose();
             scheduleRigMood();
             scheduleRigBlink();
             scheduleRigIdleSequence();

@@ -5,7 +5,7 @@ This package uses the generated character artwork directly. An SVG container kee
 ## Files
 
 - `character-rig.svg` — layered SVG container
-- `assets/base-*.png` — crossed-arm and raised-hand pose sprites
+- `assets/base-crossed.png` — crossed-arm body sprite
 - `assets/face-overlay.png` — stable glasses, brows, and blush layer
 - `assets/eyes-*.png` — independently swappable eye sprites
 - `assets/mouth-*.png` — independently swappable mouth sprites
@@ -24,7 +24,6 @@ const element = document.querySelector("#character");
 element.addEventListener("rig-ready", ({ detail: rig }) => {
   rig.setVariant("eyes", "happy");
   rig.setVariant("mouth", "happy");
-  rig.setVariant("base", "wave");
   rig.setTransform("eyes", { x: 4, y: -2 });
   rig.setTransform("mouth", { x: 0, y: 3 });
 });
