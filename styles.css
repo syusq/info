@@ -381,14 +381,31 @@
         .dialogue-container:hover { filter: brightness(1.2); }
 
         .dialogue-box {
+            position: relative;
+            box-sizing: border-box;
             background: white; padding: 4px;
             clip-path: polygon(0% 10%, 2% 0%, 98% 8%, 100% 25%, 98% 95%, 95% 100%, 0% 100%, 0% 85%);
             filter: drop-shadow(4px 0px 0px rgba(255,0,0,0.5)) drop-shadow(-4px 0px 0px rgba(0,255,255,0.5));
             pointer-events: auto;
+            transition: height 420ms cubic-bezier(0.22, 0.8, 0.28, 1);
+        }
+
+        .dialogue-box.is-resizing {
+            will-change: height;
+        }
+
+        .dialogue-box.is-resizing > .box-inner {
+            height: 100%;
+        }
+
+        .dialogue-box.is-measuring {
+            height: auto !important;
+            transition: none !important;
         }
 
         .box-inner {
-            background: var(--black); padding: 30px 40px;
+            box-sizing: border-box;
+            background: var(--black); padding: 30px 155px 30px 40px;
             clip-path: polygon(0% 10%, 2% 0%, 98% 8%, 100% 25%, 98% 95%, 95% 100%, 0% 100%, 0% 85%);
             display: flex; align-items: center; gap: 30px;
         }
@@ -626,6 +643,77 @@
             pointer-events: auto;
         }
 
+        .dialogue-frame-border {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            overflow: visible;
+            pointer-events: none;
+        }
+
+        .dialogue-frame-border path {
+            fill: none;
+            stroke: white;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .rig-frame {
+            position: absolute;
+            right: -4px;
+            bottom: -4px;
+            width: 210px;
+            height: 270px;
+            z-index: 3;
+            overflow: hidden;
+            pointer-events: none;
+            transform: rotate(-8deg);
+            transform-origin: 100% 100%;
+        }
+
+        .dialogue-character {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform: translate(7%, 0) scale(0.9);
+            transform-origin: 100% 100%;
+            filter: saturate(1.08) contrast(1.04) drop-shadow(-5px 7px 2px rgba(0, 0, 0, 0.72));
+            opacity: 1;
+            scale: 1;
+            transition: scale 120ms ease, filter 120ms ease;
+        }
+
+        .dialogue-character.is-changing-pose {
+            opacity: 1;
+            scale: 0.998 0.995;
+            filter: saturate(1.08) contrast(1.04) drop-shadow(-5px 7px 2px rgba(0, 0, 0, 0.72));
+        }
+
+        .dialogue-character svg {
+            transform-origin: 50% 86%;
+            animation: rigLiving var(--rig-breath-duration, 3.8s) ease-in-out infinite;
+            will-change: transform;
+        }
+
+        @keyframes rigLiving {
+            0%, 100% {
+                transform: translateY(0) rotate(var(--rig-sway-left, -0.35deg)) scale(1, 1);
+            }
+            50% {
+                transform: translateY(-0.7%) rotate(var(--rig-sway-right, 0.35deg)) scale(1.008, var(--rig-breath-scale, 1.016));
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .dialogue-box { transition: none; }
+            .dialogue-character { transition: none; scale: 1; }
+            .dialogue-character svg { animation: none; }
+        }
+
         model-viewer {
             display: block;
             position: relative;
@@ -851,6 +939,12 @@
                 width: 211px;
                 height: 233px;
             }
+            .rig-frame {
+                top: 242px;
+                right: 192px;
+                width: 185px;
+                height: 230px;
+            }
             .miku-credit {
                 top: 86px;
                 right: 155px;
@@ -889,6 +983,12 @@
                 right: -15px;
                 width: 182px;
                 height: 201px;
+            }
+            .rig-frame {
+                top: 210px;
+                right: 166px;
+                width: 160px;
+                height: 200px;
             }
             .miku-credit {
                 top: 75px;
@@ -934,6 +1034,12 @@
                 right: -12px;
                 width: 156px;
                 height: 172px;
+            }
+            .rig-frame {
+                top: 176px;
+                right: 143px;
+                width: 137px;
+                height: 171px;
             }
             .miku-credit {
                 top: 62px;
@@ -1004,6 +1110,12 @@
                 width: 125px;
                 height: 138px;
             }
+            .rig-frame {
+                top: 141px;
+                right: 114px;
+                width: 110px;
+                height: 138px;
+            }
             .miku-credit {
                 top: 50px;
                 right: 92px;
@@ -1042,6 +1154,12 @@
                 width: 108px;
                 height: 119px;
             }
+            .rig-frame {
+                top: 122px;
+                right: 98px;
+                width: 95px;
+                height: 119px;
+            }
             .miku-credit {
                 top: 44px;
                 right: 79px;
@@ -1070,6 +1188,12 @@
                 right: -10px;
                 width: 120px;
                 height: 133px;
+            }
+            .rig-frame {
+                top: 136px;
+                right: 109px;
+                width: 104px;
+                height: 130px;
             }
             .miku-credit {
                 top: 49px;
@@ -1158,6 +1282,40 @@
         .copyright-widget:hover {
             text-shadow: 0 0 5px rgba(57,197,187,0.35);
         }
+
+        /* Keep the rig mount scoped to whichever widget contains it. */
+        .model-container > .rig-frame {
+            position: absolute;
+            inset: 0;
+            top: 0;
+            right: auto;
+            bottom: auto;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-8deg) scale(0.96);
+        }
+
+        .dialogue-box > .rig-frame {
+            position: absolute;
+            inset: auto -4px -4px auto;
+            width: 30%;
+            min-width: 0;
+            height: auto;
+            aspect-ratio: 7 / 9;
+            transform: rotate(-8deg);
+        }
+
+        .dialogue-box > .box-inner { padding-right: 32%; }
+
+        @media (max-width: 768px) {
+            .dialogue-box > .rig-frame { right: -2px; bottom: -3px; }
+        }
+
+        @media (max-width: 480px) {
+            .dialogue-box > .rig-frame { right: -1px; bottom: -2px; }
+        }
+
         .time-text:hover,
         .date-text:hover {
             text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.88), 0 0 6px rgba(57, 197, 187, 0.38);

@@ -19,7 +19,7 @@ let audioContext = null;
         window.addEventListener('touchstart', initializeAudio, { capture: true, passive: true });
         const customCursor = document.getElementById('custom-cursor');
         const startupCurtain = document.getElementById('startup-curtain');
-        const startupPending = new Set(['window', 'fonts', 'models']);
+        const startupPending = new Set(['window', 'fonts', 'models', 'rig']);
         let startupRevealStarted = false;
 
         function revealStartupCurtain() {
@@ -250,7 +250,8 @@ let audioContext = null;
         setupHoverSFX();
 
         import { backgrounds, copyrightInfo, reactionGifs } from './content.js?v=27';
-        import { dialogues } from './dialogues.js?v=16';
+        import { dialogues } from './dialogues.js?v=18';
+        import '../rig/vector-rig.js?v=4';
 
         let currentDialogueIndex = 0;
         let currentGifIndex = 0;
@@ -263,6 +264,222 @@ let audioContext = null;
             element.textContent = speaker;
             element.dataset.speaker = speaker.toLowerCase();
         }
+
+        const dialogueCharacter = document.getElementById('dialogue-character');
+        let dialogueRig = null;
+        let rigPoseTimer = null;
+        let rigMoodTimer = null;
+        let rigBlinkTimer = null;
+        let rigIdleTimer = null;
+        let rigIsChanging = false;
+        let rigMood = 'neutral';
+        let rigReactionToken = 0;
+        let rigReactionUntil = 0;
+        let rigPointerWasNear = false;
+        let rigPointerReactionCooldown = 0;
+        let rigClickHistory = [];
+        let rigModelsReady = false;
+        let rigIrritatedUntil = 0;
+
+        const rigPoseChoices = [
+            { value: 'crossed', weight: 49 },
+            { value: 'relaxed', weight: 49 },
+            { value: 'wave', weight: 2 }
+        ];
+
+        const rigExpressionChoices = [
+            { value: 'neutral', weight: 28 },
+            { value: 'happy', weight: 26 },
+            { value: 'concerned', weight: 16 },
+            { value: 'embarrassed', weight: 14 },
+            { value: 'annoyed', weight: 10 },
+            { value: 'surprised', weight: 6 }
+        ];
+
+        function pickWeighted(choices, current) {
+            const available = choices.filter(choice => choice.value !== current);
+            let roll = Math.random() * available.reduce((sum, choice) => sum + choice.weight, 0);
+            for (const choice of available) {
+                roll -= choice.weight;
+                if (roll <= 0) return choice.value;
+            }
+            return available[0].value;
+        }
+
+        function transitionRig(update) {
+            if (rigIsChanging) return false;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                update();
+                return true;
+            }
+            rigIsChanging = true;
+            dialogueCharacter.classList.add('is-changing-pose');
+            const previousEyes = dialogueRig.variants.eyes || 'neutral';
+            dialogueRig.setVariant('eyes', 'closed');
+
+            window.setTimeout(() => {
+                update();
+                const updatedEyes = dialogueRig.variants.eyes;
+                const nextEyes = !updatedEyes || updatedEyes === 'closed' ? previousEyes : updatedEyes;
+                dialogueRig.setVariant('eyes', 'closed');
+
+                window.setTimeout(() => {
+                    dialogueRig.setVariant('eyes', nextEyes);
+                    dialogueCharacter.classList.remove('is-changing-pose');
+                    window.setTimeout(() => { rigIsChanging = false; }, 130);
+                }, 90);
+            }, 105);
+            return true;
+        }
+
+        function setRigLivingMotion() {
+            const duration = 3.5 + Math.random() * 1.4;
+            const breathScale = 1.011 + Math.random() * 0.009;
+            const sway = 0.22 + Math.random() * 0.28;
+            dialogueCharacter.style.setProperty('--rig-breath-duration', `${duration.toFixed(2)}s`);
+            dialogueCharacter.style.setProperty('--rig-breath-scale', breathScale.toFixed(3));
+            dialogueCharacter.style.setProperty('--rig-sway-left', `${(-sway).toFixed(2)}deg`);
+            dialogueCharacter.style.setProperty('--rig-sway-right', `${sway.toFixed(2)}deg`);
+        }
+
+        function reactRig(preset, { eyes, mouth, duration = 1800 } = {}) {
+            if (!dialogueRig) return;
+            if (preset !== 'annoyed' && performance.now() < rigIrritatedUntil) return;
+            const token = ++rigReactionToken;
+            rigReactionUntil = performance.now() + duration;
+            const applyReaction = () => {
+                if (token !== rigReactionToken) return;
+                if (preset) dialogueRig.setPreset(preset);
+                if (eyes) dialogueRig.setVariant('eyes', eyes);
+                if (mouth) dialogueRig.setVariant('mouth', mouth);
+            };
+
+            if (!transitionRig(applyReaction)) window.setTimeout(() => transitionRig(applyReaction), 360);
+
+            window.setTimeout(() => {
+                if (token !== rigReactionToken || !dialogueRig) return;
+                transitionRig(() => dialogueRig.setPreset(rigMood));
+            }, duration);
+        }
+
+        function scheduleRandomRigPose(delay = 12000 + Math.random() * 10000) {
+            window.clearTimeout(rigPoseTimer);
+            rigPoseTimer = window.setTimeout(randomizeRigPose, delay);
+        }
+
+        function randomizeRigPose() {
+            if (dialogueRig && !document.hidden) {
+                const nextPose = pickWeighted(rigPoseChoices, dialogueRig.variants.base);
+                transitionRig(() => dialogueRig.setVariant('base', nextPose));
+                scheduleRandomRigPose(nextPose === 'wave'
+                    ? 2400 + Math.random() * 1200
+                    : 24000 + Math.random() * 24000);
+                return;
+            }
+            scheduleRandomRigPose();
+        }
+
+        function scheduleRigMood(delay = 15000 + Math.random() * 25000) {
+            window.clearTimeout(rigMoodTimer);
+            rigMoodTimer = window.setTimeout(changeRigMood, delay);
+        }
+
+        function changeRigMood() {
+            if (dialogueRig && !document.hidden) {
+                rigMood = pickWeighted(rigExpressionChoices, rigMood);
+                setRigLivingMotion();
+                if (performance.now() >= rigReactionUntil) {
+                    transitionRig(() => dialogueRig.setPreset(rigMood));
+                }
+            }
+            scheduleRigMood();
+        }
+
+        function scheduleRigBlink(delay = 1800 + Math.random() * 1800) {
+            window.clearTimeout(rigBlinkTimer);
+            rigBlinkTimer = window.setTimeout(runRigBlink, delay);
+        }
+
+        async function runRigBlink() {
+            if (dialogueRig && !document.hidden && !rigIsChanging) {
+                await dialogueRig.blink(105 + Math.random() * 45);
+                if (Math.random() < 0.22) {
+                    await new Promise(resolve => window.setTimeout(resolve, 85 + Math.random() * 55));
+                    await dialogueRig.blink(80 + Math.random() * 35);
+                }
+            }
+            scheduleRigBlink(2700 + Math.random() * 3300);
+        }
+
+        function scheduleRigIdleSequence(delay = 22000 + Math.random() * 33000) {
+            window.clearTimeout(rigIdleTimer);
+            rigIdleTimer = window.setTimeout(runRigIdleSequence, delay);
+        }
+
+        function runRigIdleSequence() {
+            if (dialogueRig && !document.hidden && !rigIsChanging && performance.now() >= rigReactionUntil && Math.random() < 0.2) {
+                transitionRig(() => dialogueRig.setPreset('embarrassed'));
+                window.setTimeout(() => {
+                    if (performance.now() >= rigReactionUntil) {
+                        transitionRig(() => dialogueRig.setPreset(rigMood));
+                    }
+                }, 2500);
+            }
+            scheduleRigIdleSequence();
+        }
+
+        function handleRigPointerMove(event) {
+            if (!dialogueRig) return;
+            const rect = dialogueCharacter.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
+            const near = distance < 175;
+            const now = performance.now();
+
+            if (near && !rigPointerWasNear && now >= rigPointerReactionCooldown) {
+                const speed = Math.hypot(mouseVelocityX, mouseVelocityY);
+                rigPointerReactionCooldown = now + 5200;
+                reactRig(speed > 22 ? 'surprised' : 'happy', {
+                    mouth: speed > 22 ? 'surprised' : 'neutral',
+                    duration: speed > 22 ? 1250 : 1600
+                });
+            }
+            rigPointerWasNear = near || (rigPointerWasNear && distance < 230);
+        }
+
+        function registerRigClick(event) {
+            if (!dialogueRig) return;
+            const now = performance.now();
+            rigClickHistory = rigClickHistory.filter(time => now - time < 2400);
+            rigClickHistory.push(now);
+
+            const clickedPet = event.target?.closest?.('.screen-pet');
+            if (clickedPet) {
+                reactRig('happy', { mouth: 'happy', duration: 1700 });
+            } else if (rigClickHistory.length >= 4) {
+                rigClickHistory = [];
+                rigIrritatedUntil = now + 2300;
+                reactRig('annoyed', { mouth: 'annoyed', duration: 2300 });
+            }
+        }
+
+        dialogueCharacter.addEventListener('rig-ready', ({ detail }) => {
+            dialogueRig = detail;
+            rigMood = 'neutral';
+            dialogueRig.setPreset(rigModelsReady ? 'happy' : 'concerned');
+            setRigLivingMotion();
+            scheduleRandomRigPose();
+            scheduleRigMood();
+            scheduleRigBlink();
+            scheduleRigIdleSequence();
+            markStartupReady('rig');
+        });
+
+        dialogueCharacter.addEventListener('rig-error', () => markStartupReady('rig'));
+
+        document.addEventListener('mousemove', handleRigPointerMove, { passive: true });
+        document.addEventListener('mousedown', registerRigClick);
 
         setSpeakerLabel(document.getElementById('speaker-label'), dialogues[0].speaker);
         document.getElementById('dialogue-text').textContent = dialogues[0].text;
@@ -290,6 +507,32 @@ let audioContext = null;
             });
         }
 
+        function beginDialogueResize() {
+            const box = document.querySelector('.dialogue-box');
+            const startHeight = box.getBoundingClientRect().height;
+            box.style.height = `${startHeight}px`;
+            box.classList.add('is-resizing');
+            return { box, startHeight };
+        }
+
+        function resizeDialogueForText(state, element, text) {
+            state.box.classList.add('is-measuring');
+            element.textContent = text;
+            const targetHeight = state.box.getBoundingClientRect().height;
+            element.textContent = '';
+            state.box.classList.remove('is-measuring');
+            state.box.style.height = `${state.startHeight}px`;
+            void state.box.offsetHeight;
+            window.requestAnimationFrame(() => {
+                state.box.style.height = `${targetHeight}px`;
+            });
+        }
+
+        function finishDialogueResize(state) {
+            state.box.classList.remove('is-resizing');
+            state.box.style.height = 'auto';
+        }
+
         async function advanceDialogue() {
             if (isTyping) {
                 skipTyping = true;
@@ -302,6 +545,7 @@ let audioContext = null;
             const dialogue = dialogues[currentDialogueIndex];
             const speakerLabel = document.getElementById('speaker-label');
             const dialogueText = document.getElementById('dialogue-text');
+            const resizeState = beginDialogueResize();
 
             speakerLabel.style.opacity = '0';
             dialogueText.style.opacity = '0';
@@ -310,9 +554,11 @@ let audioContext = null;
             setSpeakerLabel(speakerLabel, dialogue.speaker);
             speakerLabel.style.opacity = '1';
             await new Promise(resolve => setTimeout(resolve, 100));
+            resizeDialogueForText(resizeState, dialogueText, dialogue.text);
             dialogueText.style.opacity = '1';
 
             await typeWriter(dialogueText, dialogue.text);
+            finishDialogueResize(resizeState);
             isTyping = false;
             skipTyping = false;
         }
@@ -420,10 +666,15 @@ let audioContext = null;
             }
         });
 
-        document.querySelector('.dialogue-box').addEventListener('click', advanceDialogue);
+        const dialogueBox = document.querySelector('.dialogue-box');
+        dialogueBox.addEventListener('click', () => {
+            advanceDialogue();
+            reactRig(null, { eyes: 'embarrassed', mouth: 'happy', duration: 1500 });
+        });
         document.querySelector('.avatar-circle').addEventListener('click', (e) => {
             e.stopPropagation();
             showRandomGif();
+            reactRig('surprised', { mouth: 'surprised', duration: 1400 });
         });
 
         document.querySelectorAll('.bg-btn').forEach(btn => {
@@ -431,7 +682,12 @@ let audioContext = null;
                 const index = parseInt(e.currentTarget.dataset.index, 10);
                 changeBackground(index);
                 startBackgroundRotation();
+                reactRig(null, { mouth: 'surprised', duration: 1200 });
             });
+        });
+
+        document.querySelector('.secondary-model-container')?.addEventListener('mouseenter', () => {
+            reactRig(null, { mouth: 'happy', duration: 1500 });
         });
 
         const modelViewerConfigs = [
@@ -492,6 +748,11 @@ let audioContext = null;
             if (config.startupSettled) return;
             config.startupSettled = true;
             if (modelViewerConfigs.every((item) => item.startupSettled)) {
+                rigModelsReady = true;
+                reactRig('happy', {
+                    mouth: 'happy',
+                    duration: 1900
+                });
                 markStartupReady('models');
             }
         }
@@ -1432,6 +1693,11 @@ let audioContext = null;
             if (e.key === ' ' || e.code === 'Space') {
                 e.preventDefault();
                 advanceDialogue();
+                reactRig(null, {
+                    eyes: 'embarrassed',
+                    mouth: 'happy',
+                    duration: 1500
+                });
             }
         });
 

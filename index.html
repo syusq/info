@@ -17,7 +17,7 @@
     <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="./js/importmap.js?v=1"></script>
-    <link rel="stylesheet" href="./styles.css?v=115">
+    <link rel="stylesheet" href="./styles.css?v=171">
 </head>
 <body>
 
@@ -112,6 +112,18 @@
                     <div class="message-text" id="dialogue-text"></div>
                 </div>
             </div>
+            <div class="rig-frame" aria-label="Dialogue character">
+                <vn-vector-rig
+                    id="dialogue-character"
+                    class="dialogue-character"
+                    asset="./rig/character-rig.svg"
+                    manifest="./rig/rig.json"
+                    preset="neutral">
+                </vn-vector-rig>
+            </div>
+            <svg class="dialogue-frame-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M 0.7 10.3 L 2.4 0.8 L 97.6 8.6 L 99.3 25.2 L 97.4 94.7 L 94.6 99.2 L 0.7 99.2 L 0.7 85.2 Z"></path>
+            </svg>
         </div>
     </div>
 
@@ -180,6 +192,6 @@
         </div>
     </div>
 
-    <script type="module" src="./js/app.js?v=69"></script>
+    <script type="module" src="./js/app.js?v=85"></script>
 </body>
 </html>

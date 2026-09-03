@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1123 1401" width="1123" height="1401" role="img" aria-labelledby="rig-title rig-desc" data-image-rig="vn-character">
+  <title id="rig-title">Layered generated character rig</title>
+  <desc id="rig-desc">The generated character artwork with pose, eye, and mouth sprite layers.</desc>
+  <metadata>{"format":"vn-image-rig","version":4,"viewBox":[0,0,1123,1401]}</metadata>
+  <g id="rig-root" data-rig-part="root" data-pivot-x="517" data-pivot-y="760">
+    <g id="part-base" data-rig-part="base" data-pivot-x="517" data-pivot-y="760">
+      <g id="base-crossed" data-variant="crossed"><image href="assets/base-crossed.png" xlink:href="assets/base-crossed.png" width="1123" height="1401"/></g>
+      <g id="base-relaxed" data-variant="relaxed" style="display:none"><image href="assets/base-relaxed.png" xlink:href="assets/base-relaxed.png" width="1123" height="1401"/></g>
+      <g id="base-wave" data-variant="wave" style="display:none"><image href="assets/base-wave.png" xlink:href="assets/base-wave.png" width="1123" height="1401"/></g>
+    </g>
+    <g id="part-face" data-rig-part="face" data-pivot-x="517" data-pivot-y="455">
+      <g id="part-eyes" data-rig-part="eyes" data-pivot-x="517" data-pivot-y="414">
+        <g id="eyes-neutral" data-variant="neutral"><image href="assets/eyes-neutral.png" xlink:href="assets/eyes-neutral.png" width="1123" height="1401"/></g>
+        <g id="eyes-happy" data-variant="happy" style="display:none"><image href="assets/eyes-happy.png" xlink:href="assets/eyes-happy.png" width="1123" height="1401"/></g>
+        <g id="eyes-embarrassed" data-variant="embarrassed" style="display:none"><image href="assets/eyes-embarrassed.png" xlink:href="assets/eyes-embarrassed.png" width="1123" height="1401"/></g>
+        <g id="eyes-concerned" data-variant="concerned" style="display:none"><image href="assets/eyes-concerned.png" xlink:href="assets/eyes-concerned.png" width="1123" height="1401"/></g>
+        <g id="eyes-surprised" data-variant="surprised" style="display:none"><image href="assets/eyes-surprised.png" xlink:href="assets/eyes-surprised.png" width="1123" height="1401"/></g>
+        <g id="eyes-annoyed" data-variant="annoyed" style="display:none"><image href="assets/eyes-annoyed.png" xlink:href="assets/eyes-annoyed.png" width="1123" height="1401"/></g>
+        <g id="eyes-closed" data-variant="closed" style="display:none"><image href="assets/eyes-closed.png" xlink:href="assets/eyes-closed.png" width="1123" height="1401"/></g>
+      </g>
+      <g id="part-face-overlay" data-rig-part="face-overlay">
+        <image href="assets/face-overlay.png" xlink:href="assets/face-overlay.png" width="1123" height="1401"/>
+      </g>
+      <g id="part-mouth" data-rig-part="mouth" data-pivot-x="517" data-pivot-y="520">
+        <g id="mouth-neutral" data-variant="neutral"><image href="assets/mouth-neutral.png" xlink:href="assets/mouth-neutral.png" width="1123" height="1401"/></g>
+        <g id="mouth-happy" data-variant="happy" style="display:none"><image href="assets/mouth-happy.png" xlink:href="assets/mouth-happy.png" width="1123" height="1401"/></g>
+        <g id="mouth-embarrassed" data-variant="embarrassed" style="display:none"><image href="assets/mouth-embarrassed.png" xlink:href="assets/mouth-embarrassed.png" width="1123" height="1401"/></g>
+        <g id="mouth-concerned" data-variant="concerned" style="display:none"><image href="assets/mouth-concerned.png" xlink:href="assets/mouth-concerned.png" width="1123" height="1401"/></g>
+        <g id="mouth-surprised" data-variant="surprised" style="display:none"><image href="assets/mouth-surprised.png" xlink:href="assets/mouth-surprised.png" width="1123" height="1401"/></g>
+        <g id="mouth-annoyed" data-variant="annoyed" style="display:none"><image href="assets/mouth-annoyed.png" xlink:href="assets/mouth-annoyed.png" width="1123" height="1401"/></g>
+        <g id="mouth-closed" data-variant="closed" style="display:none"><image href="assets/mouth-closed.png" xlink:href="assets/mouth-closed.png" width="1123" height="1401"/></g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VN Vector Rig Example</title>
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #11131a; color: #f4f4f7; font-family: system-ui, sans-serif; }
+      main { width: min(94vw, 620px); }
+      vn-vector-rig { display: block; height: min(78vh, 760px); }
+      nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+      button { border: 1px solid #3b3e49; border-radius: 8px; padding: 8px 12px; background: #1b1d25; color: inherit; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <vn-vector-rig id="character" preset="neutral"></vn-vector-rig>
+      <nav>
+        <button data-preset="neutral">Neutral</button>
+        <button data-preset="happy">Happy</button>
+        <button data-preset="concerned">Concerned</button>
+        <button data-preset="surprised">Surprised</button>
+        <button data-pose="crossed">Crossed arms</button>
+        <button data-pose="relaxed">Relaxed</button>
+        <button data-pose="wave">Raised hand</button>
+      </nav>
+    </main>
+    <script type="module">
+      import "./vector-rig.js";
+      const character = document.querySelector("#character");
+      character.addEventListener("rig-ready", ({ detail: rig }) => {
+        document.querySelectorAll("[data-preset]").forEach((button) => {
+          button.addEventListener("click", () => rig.setPreset(button.dataset.preset));
+        });
+        document.querySelectorAll("[data-pose]").forEach((button) => {
+          button.addEventListener("click", () => rig.setVariant("base", button.dataset.pose));
+        });
+      });
+    </script>
+  </body>
+</html>

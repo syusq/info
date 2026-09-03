@@ -1,0 +1,30 @@
+{
+  "format": "vn-image-rig",
+  "version": 4,
+  "asset": "character-rig.svg",
+  "viewBox": [0, 0, 1123, 1401],
+  "parts": {
+    "root": { "selector": "#rig-root", "pivot": [517, 760], "editable": true },
+    "base": {
+      "selector": "#part-base", "pivot": [517, 760], "editable": true,
+      "variants": ["crossed", "relaxed", "wave"], "default": "crossed"
+    },
+    "face": { "selector": "#part-face", "pivot": [517, 455], "editable": true },
+    "eyes": {
+      "selector": "#part-eyes", "pivot": [517, 414], "editable": true,
+      "variants": ["neutral", "happy", "embarrassed", "concerned", "surprised", "annoyed", "closed"], "default": "neutral"
+    },
+    "mouth": {
+      "selector": "#part-mouth", "pivot": [517, 520], "editable": true,
+      "variants": ["neutral", "happy", "embarrassed", "concerned", "surprised", "annoyed", "closed"], "default": "neutral"
+    }
+  },
+  "presets": {
+    "neutral": { "eyes": "neutral", "mouth": "neutral" },
+    "happy": { "eyes": "happy", "mouth": "happy" },
+    "embarrassed": { "eyes": "embarrassed", "mouth": "embarrassed" },
+    "concerned": { "eyes": "concerned", "mouth": "concerned" },
+    "surprised": { "eyes": "surprised", "mouth": "surprised" },
+    "annoyed": { "eyes": "annoyed", "mouth": "annoyed" }
+  }
+}
