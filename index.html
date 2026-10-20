@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="syusq's interactive personal site.">
+    <meta name="theme-color" content="#d32f2f">
+    <meta property="og:title" content="syusq // info">
+    <meta property="og:description" content="click things">
+    <meta property="og:type" content="website">
+    <title>syusq // info</title>
+    <link rel="icon" id="favicon" href="./DangoRight.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://media1.tenor.com">
+    <link rel="preload" as="image" href="https://media1.tenor.com/m/luur17rklVkAAAAC/kasane-teto-teto.gif" fetchpriority="high">
+    <link rel="preload" as="image" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" fetchpriority="high">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@900&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="./js/importmap.js?v=2"></script>
+    <link rel="stylesheet" href="./styles.css?v=187">
+    <link rel="stylesheet" href="./styles-pet.css?v=12">
+    <link rel="stylesheet" href="./styles-contact.css?v=19">
+</head>
+<body>
+
+    <div id="startup-curtain" aria-hidden="true">
+        <paper-spinner class="p5-paper-loader">
+            <template shadowrootmode="open">
+                <link rel="stylesheet" href="./assets/paper-loader-shadow.css?v=17">
+                <span class="paper-ring">
+                    <img class="paper-loader-media" src="./assets/bocchi-loader.gif?v=1" alt="" draggable="false" decoding="async" fetchpriority="high">
+                </span>
+            </template>
+        </paper-spinner>
+    </div>
+    <div id="custom-cursor"></div>
+    <div class="crt-curvature"></div>
+    <div class="crt-overlay"></div>
+    <div class="glitch-overlay" id="glitch-overlay"></div>
+
+    <div id="bg-layer-1" class="bg-layer parallax-layer" data-speed="0.015"></div>
+    <div id="bg-layer-2" class="bg-layer parallax-layer" data-speed="0.015"></div>
+
+    <div class="clock-model-group parallax-layer" data-speed="0.035" data-constrain="true">
+        <div class="p5-clock-widget aberration sfx-hover">
+            <div class="date-text" id="date-display">JAN 13 // TUE</div>
+            <div class="time-text" id="clock">19:39</div>
+            <svg class="clock-frame-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M 15 84.5 L 1 1 L 99 1 L 99 99 L 15 84.5"></path>
+                <path d="M 15 84.5 L 25.8 86.4"></path>
+            </svg>
+        </div>
+
+        <div class="secondary-model-container sfx-hover">
+            <div class="model-loader-overlay" id="model-loader-secondary" role="status" aria-live="polite" aria-label="Loading secondary 3D model">
+                <div class="spinner" aria-hidden="true"></div>
+            </div>
+            <model-viewer
+                id="mv-model-secondary"
+                data-src="./migu/miku.glb"
+                alt="MikuModel"
+                camera-controls rotation-speed="20deg"
+                environment-image="legacy" tone-mapping="neutral" exposure="0.9"
+                shadow-intensity="0.45" shadow-softness="0.2"
+                camera-target="0m 0.9m 0m" camera-orbit="-0deg 0deg 5m" field-of-view="28deg"
+                min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 20m"
+                animation-name="Chibi_Combined" autoplay animation-crossfade-duration="300"
+                disable-zoom interaction-prompt="none">
+                <effect-composer render-mode="performance">
+                    <ssao-effect strength="1.6"></ssao-effect>
+                    <outline-effect
+                        color="#12100f"
+                        edge-strength="4"
+                        blur
+                        x-ray="false">
+                    </outline-effect>
+                    <color-grade-effect
+                        tonemapping="reinhard"
+                        contrast="0.18"
+                        saturation="0.14"
+                        brightness="-0.008">
+                    </color-grade-effect>
+                </effect-composer>
+            </model-viewer>
+            <svg class="model-frame-border secondary-model-frame-border" viewBox="0 0 240 265" preserveAspectRatio="none" aria-hidden="true">
+                <path class="secondary-model-frame-edge" d="M 238 24 L 238 263 L 2 171 L 48 2"></path>
+            </svg>
+            <div class="miku-credit">miratsu / 新生帝国野餐队队长</div>
+        </div>
+    </div>
+
+    <div class="dialogue-container parallax-layer" data-speed="0.05" data-constrain="true">
+        <div class="social-links">
+            <a href="https://youtube.com/playlist?list=PL86E8E3F409C4E7B8&si=q8Ec4tWCC7jssJz0" class="social-btn peak-btn sfx-hover">
+                <div class="social-btn-inner">PEAK</div>
+            </a>
+            <a href="https://backloggd.com/u/syusq/" class="social-btn sfx-hover">
+                <div class="social-btn-inner">BACKLOGGD</div>
+            </a>
+            <button type="button" class="social-btn beach-btn sfx-hover" id="cover-open-btn" aria-haspopup="dialog" aria-label="Open fullscreen cover">
+                <div class="social-btn-inner">BEACH</div>
+            </button>
+            <button type="button" class="social-btn sfx-hover" id="contact-open-btn" aria-haspopup="dialog" aria-controls="contact-panel" aria-expanded="false">
+                <div class="social-btn-inner">CONTACT</div>
+            </button>
+            <section id="contact-panel" role="dialog" aria-label="Contact" aria-hidden="true" hidden>
+                <form id="contact-form" data-endpoint="https://formspree.io/f/maeqgjye" novalidate autocomplete="off">
+                    <div class="contact-field">
+                        <textarea id="contact-message" name="message" rows="3" maxlength="2000" placeholder="Lorem ipsum dolor sit amet..." aria-label="Message" required></textarea>
+                        <span class="contact-status" id="contact-status" role="status" aria-live="polite"></span>
+                    </div>
+                    <input class="contact-trap" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+                    <div class="contact-foot">
+                        <button type="submit" class="contact-send sfx-hover" id="contact-send"><span class="contact-send-label">SEND</span></button>
+                    </div>
+                </form>
+            </section>
+        </div>
+        <div class="dialogue-box sfx-hover">
+            <div class="box-inner">
+                <div class="avatar-circle sfx-hover">
+                    <div class="avatar-spinner" id="avatar-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <img id="avatar-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8WKp_l094PMlLP92V0gpjbSwd5eS3SxKkmw&s" alt="">
+                    <img id="gif-image" src="" alt="" class="hidden">
+                </div>
+                <div class="text-content">
+                    <div class="diva-label aberration" id="speaker-label"></div>
+                    <div class="message-text" id="dialogue-text"></div>
+                </div>
+            </div>
+            <div class="rig-frame" aria-label="Dialogue character">
+                <vn-vector-rig
+                    id="dialogue-character"
+                    class="dialogue-character"
+                    asset="./rig/character-rig.svg?v=3"
+                    manifest="./rig/rig.json?v=3"
+                    preset="neutral">
+                </vn-vector-rig>
+            </div>
+            <svg class="dialogue-frame-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M 0.7 10.3 L 2.4 0.8 L 97.6 8.6 L 99.3 25.2 L 97.4 94.7 L 94.6 99.2 L 0.7 99.2 L 0.7 85.2 Z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <div class="bg-controls parallax-layer" data-speed="0.04" data-constrain="true">
+        <div class="copyright-widget" id="copyright-display">
+            <span id="copyright-text"> </span>
+        </div>
+        <div class="bg-buttons">
+            <div class="bg-btn sfx-hover" data-index="0" data-jp="壱">01<svg class="kanji-strokes" data-src="./assets/kanji/058f1.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="1" data-jp="弐">02<svg class="kanji-strokes" data-src="./assets/kanji/05f10.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="2" data-jp="参">03<svg class="kanji-strokes" data-src="./assets/kanji/053c2.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="3" data-jp="肆">04<svg class="kanji-strokes" data-src="./assets/kanji/08086.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+            <div class="bg-btn sfx-hover" data-index="4" data-jp="伍">05<svg class="kanji-strokes" data-src="./assets/kanji/04f0d.svg" viewBox="0 0 109 109" aria-hidden="true"></svg></div>
+        </div>
+    </div>
+
+    <div class="model-container parallax-layer sfx-hover" data-speed="0.025" data-constrain="true">
+        <div class="model-loader-overlay" id="model-loader" role="status" aria-live="polite" aria-label="Loading 3D model">
+            <div class="spinner" aria-hidden="true"></div>
+        </div>
+        <model-viewer
+            id="mv-model"
+            data-src="./dangoo.glb"
+            alt="Rotatable 3D dango model"
+            camera-controls rotation-speed="20deg"
+            environment-image="legacy" tone-mapping="neutral" exposure="0.9"
+            shadow-intensity="0.45" shadow-softness="0.2"
+            camera-target="0m 0m 0m" camera-orbit="-180deg 75deg 5m" field-of-view="30deg"
+            min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 20m"
+            disable-zoom interaction-prompt="none">
+            <effect-composer render-mode="performance">
+                <ssao-effect strength="1.5"></ssao-effect>
+                <pixelate-effect granularity="1.5"></pixelate-effect>
+                <color-grade-effect
+                    tonemapping="reinhard"
+                    contrast="0.06"
+                    saturation="0.04"
+                    brightness="-0.008">
+                </color-grade-effect>
+            </effect-composer>
+        </model-viewer>
+        <svg class="model-frame-border" viewBox="0 0 270 320" preserveAspectRatio="none" aria-hidden="true">
+            <path class="model-frame-edge-near" d="M 23 286 L 2 2 L 268 34"></path>
+            <path class="model-frame-edge-far" d="M 268 34 L 248 317 L 23 286"></path>
+        </svg>
+    </div>
+
+    <div id="screen-pet-1" class="screen-pet" data-color="var(--pink)">
+        <div class="pet-sprite-container">
+            <img class="pet-img-right" src="./DangoRight.png" alt="" decoding="async">
+            <img class="pet-img-left" src="./DangoLeft.png" alt="" decoding="async">
+        </div>
+    </div>
+
+    <div id="screen-pet-2" class="screen-pet" data-color="var(--blue)">
+        <div class="pet-sprite-container">
+            <img class="pet-img-right" src="./DangoRight2.png" alt="" decoding="async">
+            <img class="pet-img-left" src="./DangoLeft2.png" alt="" decoding="async">
+        </div>
+    </div>
+
+    <div id="screen-pet-3" class="screen-pet" data-color="var(--green)">
+        <div class="pet-sprite-container">
+            <img class="pet-img-right" src="./DangoRight3.png" alt="" decoding="async">
+            <img class="pet-img-left" src="./DangoLeft3.png" alt="" decoding="async">
+        </div>
+    </div>
+
+    <div class="screen-cover parallax-layer" id="screen-cover" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Fullscreen cover" data-speed="0.02" data-constrain="true">
+        <div class="screen-cover-inner">
+            <img class="screen-cover-gif" src="./assets/beach.gif" alt="" decoding="async">
+            <div class="screen-cover-hint aberration" aria-hidden="true">CLICK / ESC TO CLOSE</div>
+            <div class="screen-cover-credits aberration">GIF &copy; FREEBIRD GAMES &mdash; TO THE MOON BEACH EPISODE</div>
+        </div>
+    </div>
+
+    <!-- Typing pet disabled pending illustration licensing check. Uncomment the block
+         and the pet.js include at the bottom to bring it back. -->
+    <!--
+    <div id="typing-pet" class="parallax-layer" data-speed="0.035">
+        <div class="typing-pet-drag">
+            <div class="typing-pet-credit">리온</div>
+            <img src="./pet/sprite-1.png" alt="">
+        </div>
+    </div>
+    -->
+
+    <script type="module" src="./js/app.js?v=101"></script>
+    <!-- <script src="./js/pet.js?v=7"></script> -->
+    <script src="./js/contact.js?v=7"></script>
+</body>
+</html>

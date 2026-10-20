@@ -1,0 +1,69 @@
+#typing-pet {
+    position: fixed;
+    right: -16px;
+    bottom: 90px;
+    width: 200px;
+    z-index: 99985;
+    pointer-events: none;
+    user-select: none;
+    display: none;
+}
+
+.typing-pet-drag {
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.typing-pet-drag.is-dragging {
+    cursor: grabbing;
+}
+
+#typing-pet img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    filter:
+        drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff)
+        drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)
+        drop-shadow(0 6px 8px rgba(0, 0, 0, 0.35));
+    animation: typing-pet-bob 3.2s ease-in-out infinite;
+}
+
+#typing-pet img.tap {
+    animation: typing-pet-bob 3.2s ease-in-out infinite, typing-pet-tap 180ms ease-out;
+}
+
+.typing-pet-credit {
+    padding-right: 38px;
+    margin-bottom: -1px;
+    text-align: right;
+    font-family: 'Teko', sans-serif;
+    font-size: clamp(9px, 0.7vw, 11px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.45);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.9), 0 0 5px rgba(57, 197, 187, 0.35);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+@media (pointer: fine) and (min-width: 640px) {
+    #typing-pet {
+        display: block;
+    }
+}
+
+@keyframes typing-pet-bob {
+    0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+    50% { transform: translateY(-2px) rotate(0.5deg); }
+}
+
+@keyframes typing-pet-tap {
+    0% { scale: 1; }
+    40% { scale: 1.06; }
+    100% { scale: 1; }
+}
